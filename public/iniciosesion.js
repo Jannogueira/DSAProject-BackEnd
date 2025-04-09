@@ -20,13 +20,14 @@ $(document).ready(function () {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 success: function (response) {
-                    alert('Inicio de sesión completado.');
-                    // Aquí puedes redirigir o guardar token si lo necesitas
                     console.log(response);
+                    if (response.status === true) {
+                        alert(response.message); // o "Inicio de sesión completado"
+                    } else {
+                        alert("Login fallido");
+                    }
                 },
-                error: function () {
-                    alert('Error en el inicio de sesión, comprueba los datos.');
-                }
+
             });
         }
     });

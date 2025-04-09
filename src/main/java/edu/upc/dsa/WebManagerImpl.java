@@ -43,6 +43,7 @@ public class WebManagerImpl implements WebManager {
     public Boolean LoginUser(String correo, String password) {
         for (User u : users) {
             if (u.getCorreo().equals(correo) && u.getPassword().equals(password)) {
+                System.out.println("Correo: " + correo + " | Password: " + password);
                 return true; // Coincide login
             }
         }
