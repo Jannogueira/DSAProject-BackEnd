@@ -1,18 +1,19 @@
 package edu.upc.dsa.models;
 
 public class User {
-    String usario;
+    String usuario;
     String correo;
     String password;
 
     public User(String usuario, String correo, String password){
-        this.usario = usuario;
+        this.usuario = usuario;
         this.correo = correo;
         this.password = password;
     }
+    public User(){}
 
     public String getUsario() {
-        return usario;
+        return usuario;
     }
     public String getCorreo() {
         return correo;
@@ -22,7 +23,7 @@ public class User {
     }
 
     public void setUsario(String usario) {
-        this.usario = usario;
+        this.usuario = usario;
     }
     public void setCorreo(String correo) {
         this.correo = correo;
