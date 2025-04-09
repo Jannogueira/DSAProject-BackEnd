@@ -17,8 +17,8 @@ public class UserService {
 
     WebManagerImpl wm = WebManagerImpl.getInstance();
     public UserService() {
-        this.wm.RegisterUser("Omar089", "1234", "omar@gmail.com");
-        this.wm.RegisterUser("VicPin", "5678", "victor@gmail.com");
+        this.wm.RegisterUser("Omar089", "omar@gmail.com", "1234");
+        this.wm.RegisterUser("VicPin", "victor@gmail.com", "5678");
     }
 
     @Path("users")
@@ -41,9 +41,11 @@ public class UserService {
 
         boolean success = wm.RegisterUser(username, correo, password);
         if (success) {
-            return Response.status(Response.Status.CREATED).entity("User registered successfully").build();
+            return Response.ok("{\"status\":true, \"message\":\"Register successful\"}")
+                    .type(MediaType.APPLICATION_JSON).build();
         } else {
-            return Response.status(Response.Status.CONFLICT).entity("User already exists").build();
+            return Response.ok("{\"status\":false, \"message\":\"Invalid\"}")
+                    .type(MediaType.APPLICATION_JSON).build();
         }
     }
 
@@ -60,9 +62,11 @@ public class UserService {
 
         boolean success = wm.LoginUser(correo, password);
         if (success) {
-            return Response.ok().entity("Login successful").build();
+            return Response.ok("{\"status\":true, \"message\":\"Login successful\"}")
+                    .type(MediaType.APPLICATION_JSON).build();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
+            return Response.ok("{\"status\":false, \"message\":\"Invalid\"}")
+                    .type(MediaType.APPLICATION_JSON).build();
         }
     }
 

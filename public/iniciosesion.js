@@ -21,6 +21,7 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     alert('Inicio de sesión completado.');
+                    // Aquí puedes redirigir o guardar token si lo necesitas
                     console.log(response);
                 },
                 error: function () {
@@ -38,11 +39,11 @@ $(document).ready(function () {
             alert('No has rellenado el campo de usuario');
         } else if (password === '') {
             alert('No has rellenado el campo de contraseña');
-        }else if (correo === '') {
-            alert('No has rellenado el campo de contraseña');
+        } else if (correo === '') {
+            alert('No has rellenado el campo de correo');
         } else {
             $.ajax({
-                url: 'http://localhost:8080/TocaBolas/users/register',
+                url: 'http://localhost:8080/TocaBolas/users/register', // ✅ url corregida
                 method: 'POST',
                 data: {
                     username: usuario,
