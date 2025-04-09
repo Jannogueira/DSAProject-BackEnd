@@ -15,8 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Api(value = "/vols", description = "Endpoint to vols Service")
-@Path("/vols")
+@Api(value = "/Shop", description = "Endpoint to Shop Service")
+@Path("/Shop")
 public class ShopService {
 
     WebManager wm = WebManagerImpl.getInstance();

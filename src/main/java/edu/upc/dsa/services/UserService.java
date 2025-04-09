@@ -8,6 +8,8 @@ import edu.upc.dsa.WebManagerImpl;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import edu.upc.dsa.models.User;
+import java.util.List;
 
 @Api(value = "/users", description = "Endpoint for user registration and login")
 @Path("/users")
@@ -18,6 +20,16 @@ public class UserService {
         this.wm.RegisterUser("Omar089", "1234", "omar@gmail.com");
         this.wm.RegisterUser("VicPin", "5678", "victor@gmail.com");
     }
+
+    @Path("users")
+    @GET
+    @ApiOperation(value = "Get All Users")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<User> getAllUsers() {
+        return WebManagerImpl.getInstance().getAllUsers();
+    }
+
+
     @POST
     @Path("/register")
     @ApiOperation(value = "Register a new user", notes = "Provide username, email, and password")
@@ -35,6 +47,9 @@ public class UserService {
         }
     }
 
+
+
+
     @POST
     @Path("/login")
     @ApiOperation(value = "Login a user", notes = "Provide email and password")
@@ -50,4 +65,7 @@ public class UserService {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
         }
     }
+
+
+
 }

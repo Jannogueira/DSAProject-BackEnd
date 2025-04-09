@@ -1,6 +1,6 @@
 package edu.upc.dsa;
 
-import edu.upc.dsa.models.Shop;
+import edu.upc.dsa.models.User;
 import edu.upc.dsa.models.ShopItem;
 
 import java.util.List;
@@ -14,4 +14,6 @@ public interface WebManager {
     public List<ShopItem> getAllShopItems();
 
     public void addShopItem(ShopItem item);
+
+    public List<User> getAllUsers();
 }

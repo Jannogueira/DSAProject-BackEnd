@@ -16,11 +16,6 @@ public class WebManagerImpl implements WebManager {
         users = new ArrayList<User>();
         List<ShopItem> items = new ArrayList<>();
 
-
-        items.add(new ShopItem("Bomba"));
-        items.add(new ShopItem("Shaker"));
-        items.add(new ShopItem("Eliminar Bola"));
-
         shop = new Shop(items);
 
     }
@@ -64,4 +59,8 @@ public class WebManagerImpl implements WebManager {
         this.shop.addShopItem(item);
     }
 
+    @Override
+    public List<User> getAllUsers() {
+        return this.users;
+    }
 }
