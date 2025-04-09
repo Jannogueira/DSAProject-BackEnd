@@ -5,23 +5,27 @@ $(document).ready(function () {
 
         if (usuario === '') {
             alert('No has rellenado el campo de usuario');
-        }else if(password == ''){
-            alert('No has rellenado el campo de usuario');
-        }else {
-            var urlApi = '/TocaBolas/user/' + usuario + '/' + password;
-
+        } else if (password === '') {
+            alert('No has rellenado el campo de contraseña');
+        } else {
             $.ajax({
-                url: urlApi,
-                method: 'GET',
-                dataType: 'json',
+                url: 'http://localhost:8080/TocaBolas/users/login',
+                method: 'POST',
+                data: {
+                    correo: usuario,
+                    password: password
+                },
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
                 success: function (response) {
                     alert('Inicio de sesión completado.');
-                    // Aquí puedes redirigir o hacer algo más con la respuesta
+                    // Aquí puedes redirigir o guardar token si lo necesitas
+                    console.log(response);
                 },
                 error: function () {
-                    $('#email').val('');
-                    $('#password').val('');
-                    alert('Error en el inicio de sesión, comprueba tu usuario y contraseña');
+                    alert('Error en el inicio de sesión, comprueba los datos.');
                 }
             });
         }
