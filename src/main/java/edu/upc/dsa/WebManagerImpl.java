@@ -31,12 +31,18 @@ public class WebManagerImpl implements WebManager {
     public Boolean RegisterUser(String username, String correo, String password){
         // Verifica si el usuario ya existe por correo
         for (User u : users) {
-            if (u.getCorreo().equals(correo))  return false; // Ya registrado
+            if (u.getCorreo().equals(correo)){
+                System.out.println("EXISTE EL CORREO: " + correo);
+                return false;
+                // Ya registrado
+            }
+
         }
 
         // Si no existe, lo añade
         User newUser = new User(username, correo, password);
         users.add(newUser);
+        System.out.println(" REGISTER Correo: " + correo + " | Password: " + password + " | Usuario: " + username);
         return true;
     }
     @Override
