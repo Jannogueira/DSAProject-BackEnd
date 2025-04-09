@@ -8,8 +8,8 @@ public class Shop {
 
     List<ShopItem> items;
 
-    public Shop(){
-        items = new ArrayList<ShopItem>();
+    public Shop(List<ShopItem> Items) {
+        items = Items;
     }
 
     public void addShopItem(ShopItem item){
@@ -18,5 +18,9 @@ public class Shop {
 
     public List<ShopItem> getAllShopItems(){
         return items;
+    }
+
+    public void setItems(List<ShopItem> items) {
+        this.items = items;
     }
 }

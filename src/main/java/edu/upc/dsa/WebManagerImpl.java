@@ -14,11 +14,15 @@ public class WebManagerImpl implements WebManager {
 
     private WebManagerImpl() {
         users = new ArrayList<User>();
-        shop = new Shop();
+        List<ShopItem> items = new ArrayList<>();
 
-        shop.addShopItem(new ShopItem("Bomba"));
-        shop.addShopItem(new ShopItem("Shaker"));
-        shop.addShopItem(new ShopItem("Eliminar Bola"));
+
+        items.add(new ShopItem("Bomba"));
+        items.add(new ShopItem("Shaker"));
+        items.add(new ShopItem("Eliminar Bola"));
+
+        shop = new Shop(items);
+
     }
 
     public static WebManagerImpl getInstance() {
