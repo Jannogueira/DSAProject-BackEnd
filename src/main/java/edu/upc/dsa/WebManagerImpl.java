@@ -32,7 +32,6 @@ public class WebManagerImpl implements WebManager {
         // Verifica si el usuario ya existe por correo
         for (User u : users) {
             if (u.getCorreo().equals(correo)){
-                System.out.println("EXISTE EL CORREO: " + correo);
                 return false;
                 // Ya registrado
             }
