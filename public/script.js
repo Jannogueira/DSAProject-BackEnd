@@ -43,7 +43,7 @@ $(document).ready(function () {
             alert('No has rellenado el campo de correo');
         } else {
             $.ajax({
-                url: 'http://localhost:8080/TocaBolas/users/register', // ✅ url corregida
+                url: 'http://localhost:8080/TocaBolas/users/register',
                 method: 'POST',
                 data: {
                     username: usuario,
