@@ -5,7 +5,7 @@ public class User {
     String correo;
     String password;
     String id;
-    String score
+    String score;
 
     public User(String usuario, String correo, String password){
         this.usuario = usuario;
