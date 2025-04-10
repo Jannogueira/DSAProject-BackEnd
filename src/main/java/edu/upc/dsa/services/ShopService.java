@@ -23,8 +23,6 @@ public class ShopService {
 
     public ShopService() {
 
-        this.wm.addShopItem(new ShopItem("Bomba"));
-        this.wm.addShopItem(new ShopItem("Shaker"));
     }
 
 

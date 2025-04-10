@@ -15,7 +15,9 @@ public class WebManagerImpl implements WebManager {
     private WebManagerImpl() {
         users = new ArrayList<User>();
         List<ShopItem> items = new ArrayList<>();
-
+        items.add(new ShopItem("bomba", "Objeto para explotar cualquier bola a tu alrededor!"));
+        items.add(new ShopItem("delete", "Elimina una simple bola o incluso una bola grande!"));
+        items.add(new ShopItem("oro", "Multiplica x2 tu oro obtenida durante 30 minutos!"));
         shop = new Shop(items);
 
     }
