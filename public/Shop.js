@@ -27,7 +27,7 @@ $(document).ready(function () {
                 const card = `
                     <div class="col-md-4 mb-4">
                         <div class="card shadow rounded-4">
-                            <img src="${imagenProducto}" class="card-img-top" alt="${p.name}">
+                            <img src="${imagenProducto}" class="card-img-top borderedondo" alt="${p.name}">
                             <div class="card-body">
                                 <h5 class="card-title">${p.name}</h5>
                                 <p class="card-text">${p.description}</p>

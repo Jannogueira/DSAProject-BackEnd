@@ -559,3 +559,8 @@
   -webkit-text-stroke: 0.5px black;
 }
 
+.borderedondogris {
+  border: 1px gray;
+  border-radius: 10px;
+}
+

@@ -14,7 +14,6 @@ import java.util.List;
 @Api(value = "/users", description = "Endpoint for user registration and login")
 @Path("/users")
 public class UserService {
-
     WebManagerImpl wm = WebManagerImpl.getInstance();
     public UserService() {
         this.wm.RegisterUser("Omar089", "omar@gmail.com", "1234");

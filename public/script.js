@@ -1,5 +1,7 @@
 $(document).ready(function () {
-    $('#inicioBtn').click(function () {
+    $('#inicioBtn').click(function (event) {
+        event.preventDefault(); // 👈 Evita que el formulario se envíe automáticamente
+
         var usuario = $('#email').val().trim();
         var password = $('#password').val().trim();
 
@@ -9,7 +11,7 @@ $(document).ready(function () {
             alert('No has rellenado el campo de contraseña');
         } else {
             $.ajax({
-                url: 'http://localhost:8080/TocaBolas/users/login',
+                url: '/TocaBolas/users/login',
                 method: 'POST',
                 data: {
                     correo: usuario,
@@ -21,7 +23,6 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     alert('Inicio de sesión completado.');
-                    // Aquí puedes redirigir o guardar token si lo necesitas
                     console.log(response);
                 },
                 error: function () {
@@ -30,7 +31,10 @@ $(document).ready(function () {
             });
         }
     });
-    $('#btnRegistro').click(function () {
+
+    $('#btnRegistro').click(function (event) {
+        event.preventDefault(); // 👈 También aquí
+
         var usuario = $('#rusuario').val().trim();
         var correo = $('#remail').val().trim();
         var password = $('#rpassword').val().trim();
@@ -43,7 +47,7 @@ $(document).ready(function () {
             alert('No has rellenado el campo de correo');
         } else {
             $.ajax({
-                url: 'http://localhost:8080/TocaBolas/users/register',
+                url: '/TocaBolas/users/register',
                 method: 'POST',
                 data: {
                     username: usuario,
