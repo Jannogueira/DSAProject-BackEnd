@@ -1,24 +1,32 @@
 $(document).ready(function () {
-    localStorage.setItem("user", "JanNogueira");
+
     const token = localStorage.getItem("token");
     const user  = localStorage.getItem("user");
 
-
     if (user){
-        $('#usuarioDropdown').show();            // 1. Mostrar el li primero
-        $('#usuarioBoton').text(user);           // 2. Luego cambiar el texto
-        $('#idBotonLogin').hide();               // 3. (opcional) Ocultar "Conectate"
+        $('#usuarioDropdown').show();
+        $('#usuarioBoton').text(user);
+        $('#idBotonLogin').hide();
+    }
+    else{
+        $('#idBotonTienda').hide();
+        $('#idBotonLogin').show();
     }
 
     $('#cerrarSesion').click(function() {
         localStorage.removeItem('user');
-        alert("Has cerrado sesión");
+        localStorage.removeItem('token');
         window.location.href = "index.html";
+    });
+
+    $('#testBoton').click(function() {
+        localStorage.setItem("user", "JanNogueira");
+        location.reload();
     });
 
 
     $('#inicioBtn').click(function (event) {
-        event.preventDefault(); // 👈 Evita que el formulario se envíe automáticamente
+        event.preventDefault();
 
         var usuario = $('#email').val().trim();
         var password = $('#password').val().trim();
