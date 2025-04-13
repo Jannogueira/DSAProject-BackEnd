@@ -7,6 +7,7 @@ $(document).ready(function () {
         $('#usuarioDropdown').show();
         $('#usuarioBoton').text(user);
         $('#idBotonLogin').hide();
+        $('#testBoton').hide();
     }
     else{
         $('#idBotonTienda').hide();
