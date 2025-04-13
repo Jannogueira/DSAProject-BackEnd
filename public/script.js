@@ -1,4 +1,22 @@
 $(document).ready(function () {
+    localStorage.setItem("user", "JanNogueira");
+    const token = localStorage.getItem("token");
+    const user  = localStorage.getItem("user");
+
+
+    if (user){
+        $('#usuarioDropdown').show();            // 1. Mostrar el li primero
+        $('#usuarioBoton').text(user);           // 2. Luego cambiar el texto
+        $('#idBotonLogin').hide();               // 3. (opcional) Ocultar "Conectate"
+    }
+
+    $('#cerrarSesion').click(function() {
+        localStorage.removeItem('user');
+        alert("Has cerrado sesión");
+        window.location.href = "index.html";
+    });
+
+
     $('#inicioBtn').click(function (event) {
         event.preventDefault(); // 👈 Evita que el formulario se envíe automáticamente
 
@@ -59,7 +77,8 @@ $(document).ready(function () {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 success: function (response) {
-                    alert('Registro completado.');
+                    alert('Registro completado. Serás redirigido para iniciar sesión.');
+                    window.location.href = "login.html";
                     console.log(response);
                 },
                 error: function (xhr) {

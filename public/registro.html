@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="script.js"></script>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,18 +45,24 @@
   <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
     <div class="card p-4 shadow rounded-4 marco-negro" style="width: 100%; max-width: 450px;">
       <h2 class="text-center mb-4 fuentetitulos">Crear Cuenta</h2>
-      <form>
+      <form id="myForm">
         <div class="mb-3">
-          <label for="usuario" class="form-label"><b>Usuario</b></label>
+          <label for="rusuario" class="form-label"><b>Usuario</b></label>
           <input type="text" class="form-control" id="rusuario" placeholder="Tu usuario">
         </div>
         <div class="mb-3">
-          <label for="email" class="form-label"><b>Correo electrónico</b></label>
+          <label for="remail" class="form-label"><b>Correo electrónico</b></label>
           <input type="email" class="form-control" id="remail" placeholder="ejemplo@gmail.com">
         </div>
         <div class="mb-3">
-          <label for="password" class="form-label"><b>Contraseña</b></label>
+          <label for="rpassword" class="form-label"><b>Contraseña</b></label>
           <input type="password" class="form-control" id="rpassword" placeholder="******">
+        </div>
+
+        <div class="mb-3">
+          <label for="rpassword2" class="form-label"><b>Confirmar Contraseña</b></label>
+          <input type="password" class="form-control" id="rpassword2" placeholder="******">
+          <div id="error-message" class="text-danger" style="display:none;">Las contraseñas no coinciden</div>
         </div>
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" id="terminos" onchange="abrirRegistro()">
@@ -69,16 +79,45 @@
   </div>
 </div>
 
-
 <script>
-  function abrirRegistro() {
+  function verificarCondiciones() {
     const checkbox = document.getElementById('terminos');
+    const passwordValido = (rpassword.value === rpassword2.value);
     const boton = document.getElementById('btnRegistro');
-    boton.disabled = !checkbox.checked;
+
+    // Habilitar el botón solo si ambas condiciones son verdaderas
+    boton.disabled = !(checkbox.checked && passwordValido);
   }
+
+  const rpassword = document.getElementById('rpassword');
+  const rpassword2 = document.getElementById('rpassword2');
+  const errorMessage = document.getElementById('error-message');
+  const form = document.getElementById('myForm');
+  const submitButton = document.getElementById('btnRegistro');
+  const terminosCheckbox = document.getElementById('terminos');
+
+  // Verificar condiciones cuando cambia el campo de confirmación de contraseña
+  rpassword2.addEventListener('input', function() {
+    if (rpassword.value !== rpassword2.value) {
+      rpassword2.classList.add('is-invalid');
+      errorMessage.style.display = 'block';
+    } else {
+      rpassword2.classList.remove('is-invalid');
+      errorMessage.style.display = 'none';
+    }
+    verificarCondiciones();
+  });
+
+  // Verificar condiciones cuando cambia el checkbox
+  terminosCheckbox.addEventListener('change', verificarCondiciones);
+
+  // Verificar condiciones cuando cambia la contraseña principal
+  rpassword.addEventListener('input', verificarCondiciones);
+
+  // Inicializar el estado del botón al cargar la página
+  verificarCondiciones();
 </script>
-<script src="script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 <footer class="footer-area" style="background-color: rgba(0, 0, 0, 0.85); color: white; padding: 20px 0; text-align: center; width: 100%;">
   <div class="footer-content" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; font-size: 14px;">
