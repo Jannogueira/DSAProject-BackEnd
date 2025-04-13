@@ -2,6 +2,17 @@ $(document).ready(function () {
 
     const token = localStorage.getItem("token");
     const user  = localStorage.getItem("user");
+    const currentPage = window.location.pathname.split('/').pop();
+
+    const protectedUnlogedPages = ['store.html'];
+    const protectedLogedPages = ['login.html', 'registro.html'];
+
+    if(user && protectedLogedPages.includes(currentPage)){
+        window.location.href = "index.html";
+    }
+    if(!user && protectedUnlogedPages.includes(currentPage)){
+        window.location.href = "login.html";
+    }
 
     if (user){
         $('#usuarioDropdown').show();
