@@ -30,21 +30,34 @@ public class WebManagerImpl implements WebManager {
     }
 
     @Override
-    public Boolean RegisterUser(String username, String correo, String password){
-        // Verifica si el usuario ya existe por correo
-        for (User u : users) {
-            if (u.getCorreo().equals(correo)){
-                return false;
-                // Ya registrado
-            }
+    public int RegisterUser(String username, String correo, String password){
+        if(existeEmail(correo)) //verificamos si existe ya el correo
+            return 3;
+        if(existeUser(username)) //verificamos si existe ya el usuario
+            return 2;
 
-        }
-
-        // Si no existe, lo añade
         User newUser = new User(username, correo, password);
         users.add(newUser);
         System.out.println(" REGISTER Correo: " + correo + " | Password: " + password + " | Usuario: " + username);
-        return true;
+        return 1;
+    }
+
+
+    @Override
+    public Boolean existeUser(String user){
+        for (User u : users) {
+            if (u.getUsario().equals(user))
+                return true;
+        }
+        return false;
+    }
+    @Override
+    public Boolean existeEmail(String email){
+        for (User u : users) {
+            if(u.getCorreo().equals(email))
+                return true;
+        }
+        return false;
     }
     @Override
     public Boolean LoginUser(String correo, String password) {

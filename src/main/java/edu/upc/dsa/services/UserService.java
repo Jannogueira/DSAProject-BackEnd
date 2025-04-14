@@ -39,13 +39,24 @@ public class UserService {
             @ApiParam(value = "Email", required = true) @FormParam("correo") String correo,
             @ApiParam(value = "Password", required = true) @FormParam("password") String password) {
 
-        boolean success = wm.RegisterUser(username, correo, password);
-        if (success) {
-            return Response.ok("{\"status\":true, \"message\":\"Register successful\"}")
-                    .type(MediaType.APPLICATION_JSON).build();
-        } else {
-            return Response.ok("{\"status\":false, \"message\":\"Invalid\"}")
-                    .type(MediaType.APPLICATION_JSON).build();
+        int registro = wm.RegisterUser(username, correo, password);
+
+        switch (registro) {
+            case 1: // Registro exitoso
+                return Response.ok("{\"status\":true, \"message\":\"Registro Completado\"}")
+                        .type(MediaType.APPLICATION_JSON).build();
+            case 2: // Usuario ya existe
+                return Response.status(Response.Status.CONFLICT)
+                        .entity("{\"status\":false, \"message\":\"El usuario ya existe\"}")
+                        .type(MediaType.APPLICATION_JSON).build();
+            case 3: // Correo ya existe
+                return Response.status(Response.Status.CONFLICT)
+                        .entity("{\"status\":false, \"message\":\"El correo ya existe\"}")
+                        .type(MediaType.APPLICATION_JSON).build();
+            default: // Otro error
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity("{\"status\":false, \"message\":\"Error inesperado\"}")
+                        .type(MediaType.APPLICATION_JSON).build();
         }
     }
 

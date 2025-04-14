@@ -103,7 +103,8 @@ $(document).ready(function () {
                 },
                 error: function (xhr) {
                     if (xhr.status === 409) {
-                        alert('El usuario ya existe.');
+                        const response = JSON.parse(xhr.responseText);
+                        alert(response.message);
                     } else {
                         alert('Error en el registro, comprueba los datos.');
                     }
