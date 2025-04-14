@@ -60,8 +60,13 @@ $(document).ready(function () {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 success: function (response) {
+                    const data = typeof response === "string" ? JSON.parse(response) : response;
+
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("user", data.user);
+
                     alert('Inicio de sesión completado.');
-                    console.log(response);
+                    window.location.href = "index.html"; // O la página que quieras tras iniciar sesión
                 },
                 error: function () {
                     alert('Error en el inicio de sesión, comprueba los datos.');

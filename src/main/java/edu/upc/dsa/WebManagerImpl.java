@@ -63,7 +63,7 @@ public class WebManagerImpl implements WebManager {
     public String usuarioPorCorreo(String email){
         for (User u : users) {
             if(u.getCorreo().equals(email))
-                return u.getCorreo();
+                return u.getUsario();
         }
         return null;
     }

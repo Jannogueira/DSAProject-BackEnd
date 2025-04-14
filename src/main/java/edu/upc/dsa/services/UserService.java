@@ -1,6 +1,7 @@
 package edu.upc.dsa.services;
 
 import edu.upc.dsa.WebManagerImpl;
+import edu.upc.dsa.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -73,11 +74,18 @@ public class UserService {
 
         boolean success = wm.LoginUser(correo, password);
         if (success) {
-            return Response.ok("{\"status\":true, \"message\":\"Login successful\"}")
+            System.out.println("login pre token");
+            String usuario = wm.usuarioPorCorreo(correo);
+            System.out.println("usuario recuperado por correo: " + usuario);
+            String token = JwtUtil.generateToken(usuario);
+            System.out.println("login correcto: " + usuario + " token: " + token);
+            return Response.ok("{\"status\":true, \"message\":\"Login exitoso\", \"user\":\"" + usuario + "\", \"token\":\"" + token + "\"}")
                     .type(MediaType.APPLICATION_JSON).build();
         } else {
-            return Response.ok("{\"status\":false, \"message\":\"Invalid\"}")
-                    .type(MediaType.APPLICATION_JSON).build();
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Credenciales incorrectas\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
         }
     }
 
