@@ -60,6 +60,15 @@ public class WebManagerImpl implements WebManager {
         return false;
     }
     @Override
+    public String usuarioPorCorreo(String email){
+        for (User u : users) {
+            if(u.getCorreo().equals(email))
+                return u.getCorreo();
+        }
+        return null;
+    }
+
+    @Override
     public Boolean LoginUser(String correo, String password) {
         for (User u : users) {
             if (u.getCorreo().equals(correo) && u.getPassword().equals(password)) {
