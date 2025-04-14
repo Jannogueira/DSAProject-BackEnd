@@ -1,120 +1,124 @@
 $(document).ready(function () {
-
     const token = localStorage.getItem("token");
     const user  = localStorage.getItem("user");
     const currentPage = window.location.pathname.split('/').pop();
 
+    // Verificación del token en cada carga
+    if (token) {
+        $.ajax({
+            url: '/TocaBolas/users/validate',
+            method: 'GET',
+            headers: {'Authorization': 'Bearer ' + token},
+            success: function () {
+                console.log("Token válido");
+            },
+            error: function () {
+                console.warn("Token expirado. Cerrando sesión.");
+                cerrarSesion();
+            }
+        });
+    }
+    // Redirección según estado de login
     const protectedUnlogedPages = ['store.html'];
     const protectedLogedPages = ['login.html', 'registro.html'];
 
-    if(user && protectedLogedPages.includes(currentPage)){
+    if (user && protectedLogedPages.includes(currentPage)) {
         window.location.href = "index.html";
     }
-    if(!user && protectedUnlogedPages.includes(currentPage)){
+    if (!user && protectedUnlogedPages.includes(currentPage)) {
         window.location.href = "login.html";
     }
 
-    if (user){
+    // Mostrar/ocultar opciones según sesión
+    if (user) {
         $('#usuarioDropdown').show();
         $('#usuarioBoton').text(user);
-        $('#idBotonLogin').hide();
-        $('#testBoton').hide();
-    }
-    else{
+        $('#idBotonLogin, #testBoton').hide();
+    } else {
         $('#idBotonTienda').hide();
         $('#idBotonLogin').show();
     }
 
-    $('#cerrarSesion').click(function() {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        window.location.href = "index.html";
-    });
+    // Cierre de sesión
+    $('#cerrarSesion').click(cerrarSesion);
 
-    $('#testBoton').click(function() {
+    function cerrarSesion() {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+    }
+
+    // Modo test (para desarrollo)
+    $('#testBoton').click(function () {
         localStorage.setItem("user", "JanNogueira");
         location.reload();
     });
 
-
+    // Inicio de sesión
     $('#inicioBtn').click(function (event) {
         event.preventDefault();
+        const correo = $('#email').val().trim();
+        const password = $('#password').val().trim();
 
-        var usuario = $('#email').val().trim();
-        var password = $('#password').val().trim();
-
-        if (usuario === '') {
-            alert('No has rellenado el campo de usuario');
-        } else if (password === '') {
-            alert('No has rellenado el campo de contraseña');
-        } else {
-            $.ajax({
-                url: '/TocaBolas/users/login',
-                method: 'POST',
-                data: {
-                    correo: usuario,
-                    password: password
-                },
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                success: function (response) {
-                    const data = typeof response === "string" ? JSON.parse(response) : response;
-
-                    localStorage.setItem("token", data.token);
-                    localStorage.setItem("user", data.user);
-
-                    alert('Inicio de sesión completado.');
-                    window.location.href = "index.html"; // O la página que quieras tras iniciar sesión
-                },
-                error: function () {
-                    alert('Error en el inicio de sesión, comprueba los datos.');
-                }
-            });
+        if (!correo || !password) {
+            alert('Por favor completa todos los campos.');
+            return;
         }
+
+        $.ajax({
+            url: '/TocaBolas/users/login',
+            method: 'POST',
+            data: { correo, password },
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            success: function (response) {
+                const data = typeof response === "string" ? JSON.parse(response) : response;
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", data.user);
+                alert('Inicio de sesión completado.');
+                window.location.href = "index.html";
+            },
+            error: function () {
+                alert('Error en el inicio de sesión, comprueba los datos.');
+            }
+        });
     });
 
+    // Registro de usuario
     $('#btnRegistro').click(function (event) {
-        event.preventDefault(); // 👈 También aquí
+        event.preventDefault();
 
-        var usuario = $('#rusuario').val().trim();
-        var correo = $('#remail').val().trim();
-        var password = $('#rpassword').val().trim();
+        const usuario = $('#rusuario').val().trim();
+        const correo = $('#remail').val().trim();
+        const password = $('#rpassword').val().trim();
 
-        if (usuario === '') {
-            alert('No has rellenado el campo de usuario');
-        } else if (password === '') {
-            alert('No has rellenado el campo de contraseña');
-        } else if (correo === '') {
-            alert('No has rellenado el campo de correo');
-        } else {
-            $.ajax({
-                url: '/TocaBolas/users/register',
-                method: 'POST',
-                data: {
-                    username: usuario,
-                    correo: correo,
-                    password: password
-                },
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                success: function (response) {
-                    alert('Registro completado. Serás redirigido para iniciar sesión.');
-                    window.location.href = "login.html";
-                    console.log(response);
-                },
-                error: function (xhr) {
-                    if (xhr.status === 409) {
-                        const response = JSON.parse(xhr.responseText);
-                        alert(response.message);
-                    } else {
-                        alert('Error en el registro, comprueba los datos.');
-                    }
-                }
-            });
+        if (!usuario || !correo || !password) {
+            alert('Por favor completa todos los campos.');
+            return;
         }
+
+        $.ajax({
+            url: '/TocaBolas/users/register',
+            method: 'POST',
+            data: { username: usuario, correo, password },
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            success: function () {
+                alert('Registro completado. Serás redirigido para iniciar sesión.');
+                window.location.href = "login.html";
+            },
+            error: function (xhr) {
+                if (xhr.status === 409) {
+                    const response = JSON.parse(xhr.responseText);
+                    alert(response.message);
+                } else {
+                    alert('Error en el registro, comprueba los datos.');
+                }
+            }
+        });
     });
 });

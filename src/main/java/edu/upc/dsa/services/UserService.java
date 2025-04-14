@@ -74,9 +74,7 @@ public class UserService {
 
         boolean success = wm.LoginUser(correo, password);
         if (success) {
-            System.out.println("login pre token");
             String usuario = wm.usuarioPorCorreo(correo);
-            System.out.println("usuario recuperado por correo: " + usuario);
             String token = JwtUtil.generateToken(usuario);
             System.out.println("login correcto: " + usuario + " token: " + token);
             return Response.ok("{\"status\":true, \"message\":\"Login exitoso\", \"user\":\"" + usuario + "\", \"token\":\"" + token + "\"}")
@@ -88,7 +86,28 @@ public class UserService {
                     .build();
         }
     }
+    @GET
+    @Path("/validate")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response validateToken(@HeaderParam("Authorization") String tokenHeader) {
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"valid\":false, \"message\":\"Token no proporcionado o inválido\"}")
+                    .build();
+        }
 
+        String token = tokenHeader.substring("Bearer ".length());
+
+        boolean valid = JwtUtil.validateToken(token);
+        if (valid) {
+            System.out.println("Token valido");
+            return Response.ok("{\"valid\":true}").build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"valid\":false, \"message\":\"Token inválido o expirado\"}")
+                    .build();
+        }
+    }
 
 
 }
