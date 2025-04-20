@@ -86,39 +86,4 @@ $(document).ready(function () {
         });
     });
 
-    // Registro de usuario
-    $('#btnRegistro').click(function (event) {
-        event.preventDefault();
-
-        const usuario = $('#rusuario').val().trim();
-        const correo = $('#remail').val().trim();
-        const password = $('#rpassword').val().trim();
-
-        if (!usuario || !correo || !password) {
-            alert('Por favor completa todos los campos.');
-            return;
-        }
-
-        $.ajax({
-            url: '/TocaBolas/users/register',
-            method: 'POST',
-            data: { username: usuario, correo, password },
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            success: function () {
-                alert('Registro completado. Serás redirigido para iniciar sesión.');
-                window.location.href = "login.html";
-            },
-            error: function (xhr) {
-                if (xhr.status === 409) {
-                    const response = JSON.parse(xhr.responseText);
-                    alert(response.message);
-                } else {
-                    alert('Error en el registro, comprueba los datos.');
-                }
-            }
-        });
-    });
 });
