@@ -605,7 +605,7 @@
 .terminal-loader-inicio {
   border: 0.1em solid #333;
   background-color: #1a1a1a;
-  color: #07fdaf;
+  color: #13A5C3;
   font-family: "Courier New", Courier, monospace;
   font-size: 3em;
   padding: 1.5em 1em;
@@ -666,7 +666,7 @@
   white-space: nowrap;
   overflow: hidden;
   border-right: 0.2em solid;
-  color: #07fdaf;
+  color: #13A5C3;
   animation:
           typeAndDelete 6s steps(19) infinite,
           blinkCursor 0.5s step-end infinite alternate;
