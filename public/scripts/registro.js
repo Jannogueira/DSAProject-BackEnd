@@ -1,5 +1,5 @@
 $(document).ready(function () { // Registro de usuario
-
+    $('#uiverse-registro').hide();
     $('#btnRegistro').click(function (event) {
         event.preventDefault();
 
@@ -21,8 +21,11 @@ $(document).ready(function () { // Registro de usuario
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             success: function () {
-                alert('Registro completado. Serás redirigido para iniciar sesión.');
-                window.location.href = "login";
+                $('#cuadro-registro').hide();
+                $('#uiverse-registro').show();
+                setTimeout(function() {
+                    window.location.href = "login";
+                }, 3500);
             },
             error: function (xhr) {
                 if (xhr.status === 409) {
