@@ -22,7 +22,7 @@ $(document).ready(function () { // Registro de usuario
             },
             success: function () {
                 alert('Registro completado. Serás redirigido para iniciar sesión.');
-                window.location.href = "login.html";
+                window.location.href = "login";
             },
             error: function (xhr) {
                 if (xhr.status === 409) {

@@ -19,6 +19,7 @@ public class UserService {
     public UserService() {
         this.wm.RegisterUser("Omar089", "omar@gmail.com", "1234");
         this.wm.RegisterUser("VicPin", "victor@gmail.com", "5678");
+        this.wm.RegisterUser("Jan", "jan@gmail.com", "123");
 
     }
 

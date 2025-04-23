@@ -30,21 +30,21 @@
 
   <header style="background-color: black; background-size: cover; background-position: center; color: white;" class = "sticky-top">
     <div class="container d-flex justify-content-between align-items-center py-3">
-      <a href="index.html" class="logo">
+      <a href="index" class="logo">
         <img src="imagenes/logo.png" alt="TocaBolas" style="height: 50px;">
       </a>
       <ul class="nav">
-        <li class="nav-item"><a class="nav-link boton2 text-white" href="index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link boton2 text-white" href="index">Inicio</a></li>
         <li class="nav-item"><a class="nav-link boton2 text-white" href="#">About Us</a></li>
-        <li id = "idBotonLogin" class="nav-item"><a class="nav-link boton2 text-white" href="login.html">Conectate</a></li>
-        <li id = "idBotonTienda" class="nav-item"><a class="nav-link boton2 text-white" href="store.html">Tienda</a></li>
+        <li id = "idBotonLogin" class="nav-item"><a class="nav-link boton2 text-white" href="login">Conectate</a></li>
+        <li id = "idBotonTienda" class="nav-item"><a class="nav-link boton2 text-white" href="store">Tienda</a></li>
 
         <li class="nav-item dropdown" id="usuarioDropdown" style="display: none;">
           <a class="nav-link dropdown-toggle boton3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="usuarioBoton">
             Usuario
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="cuenta.html">Cuenta</a></li>
+            <li><a class="dropdown-item" href="cuenta">Cuenta</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#" id="cerrarSesion">Cerrar Sesión</a></li>
           </ul>
@@ -83,13 +83,13 @@
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" id="terminos" onchange="abrirRegistro()">
           <label class="form-check-label" for="terminos">
-            Acepto los <a href="terminos.html" target="_blank"><b>términos y condiciones</b></a>
+            Acepto los <a href="terminos" target="_blank"><b>términos y condiciones</b></a>
           </label>
         </div>
         <button type="submit" class="btn btn-success w-100" id="btnRegistro" disabled><b>Registrarse</b></button>
       </form>
       <div class="text-center mt-3">
-        <a href="login.html" class="btn btn-link"><b>¿Ya tienes cuenta? Inicia sesión</b></a>
+        <a href="login" class="btn btn-link"><b>¿Ya tienes cuenta? Inicia sesión</b></a>
       </div>
     </div>
   </div>

@@ -578,3 +578,97 @@
   transition-duration: 400ms;
   transition-property: color;
 }
+
+/* INICIO SESION LOADING */
+
+@keyframes blinkCursor {
+  50% {
+    border-right-color: transparent;
+  }
+}
+
+@keyframes typeAndDelete {
+  0%,
+  10% {
+    width: 0;
+  }
+  45%,
+  55% {
+    width: 11.5em;
+  } /* adjust width based on content */
+  90%,
+  100% {
+    width: 0;
+  }
+}
+
+.terminal-loader-inicio {
+  border: 0.1em solid #333;
+  background-color: #1a1a1a;
+  color: #07fdaf;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 3.5em;
+  padding: 1.5em 1em;
+  width: 18em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.terminal-header-inicio {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5em;
+  background-color: #333;
+
+  padding: 0 0.4em;
+  box-sizing: border-box;
+}
+
+.terminal-controls-inicio {
+  float: right;
+}
+
+.control-inicio {
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-left: 0.4em;
+  border-radius: 50%;
+  background-color: #777;
+}
+
+.control-inicio.close {
+  background-color: #e33;
+}
+
+.control-inicio.minimize {
+  background-color: #ee0;
+}
+
+.control-inicio.maximize {
+  background-color: #0b0;
+}
+
+.terminal-title-inicio {
+  float: left;
+  line-height: 1.5em;
+  color: #eee;
+  font-weight: bold;
+}
+
+.text-inicio {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 0.2em solid;
+  color: #07fdaf;
+  animation:
+          typeAndDelete 6s steps(19) infinite,
+          blinkCursor 0.5s step-end infinite alternate;
+  margin-top: 1.5em;
+}

@@ -45,7 +45,7 @@ $(document).ready(function () {
     function cerrarSesion() {
         localStorage.removeItem("user");
         localStorage.removeItem("token");
-        window.location.href = "login.html";
+        window.location.href = "login";
     }
 
     // Modo test (para desarrollo)
