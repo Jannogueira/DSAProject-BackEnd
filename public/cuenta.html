@@ -39,7 +39,16 @@
                 <li class="nav-item"><a class="nav-link boton2 text-white" href="#">About Us</a></li>
                 <li id = "idBotonLogin" class="nav-item"><a class="nav-link boton2 text-secondary" href="#">Conectate</a></li>
                 <li id = "idBotonTienda" class="nav-item"><a class="nav-link boton2 text-white" href="store">Tienda</a></li>
-
+                <li class="nav-item dropdown" id="usuarioDropdown" style="display: none;">
+                    <a class="nav-link dropdown-toggle boton3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="usuarioBoton">
+                        Usuario
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a id="cuentaBtn" class="dropdown-item" style="font-weight: bold;">Cuenta</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="cerrarSesion" style="color: #a00505; font-weight: bold;">Cerrar Sesión</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </header>
@@ -51,12 +60,12 @@
         <br>
         <div class="cuadro-login marco-negro">
             <div class="menu-lateral">
-                <button class="fuentetitulos cuenta-underline" style="color: #1a1a1a" onclick="mostrarContenido('estadisticas')">Estadísticas</button>
-                <button class="fuentetitulos cuenta-underline" style="color: #1a1a1a" onclick="mostrarContenido('cuenta')">Cuenta</button>
+                <button id="statBtn" class="fuentetitulos cuenta-underline" style="color: #1a1a1a">Estadísticas</button>
+                <button id="accBtn" class="fuentetitulos cuenta-underline" style="color: #1a1a1a">Cuenta</button>
             </div>
 
             <div class="contenido-dinamico" id="contenido">
-                <!-- Aquí se insertará el contenido dinámico -->
+
             </div>
         </div>
 

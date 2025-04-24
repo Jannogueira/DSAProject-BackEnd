@@ -53,4 +53,7 @@ $(document).ready(function () {
         localStorage.setItem("user", "JanNogueira");
         location.reload();
     });
+    $('#cuentaBtn').click(function () {
+        window.location.href = 'cuenta?' + user;
+    });
 });
