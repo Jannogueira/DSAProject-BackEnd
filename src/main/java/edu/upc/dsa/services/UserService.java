@@ -16,6 +16,7 @@ import java.util.List;
 @Path("/users")
 public class UserService {
     WebManagerImpl wm = WebManagerImpl.getInstance();
+    private static final String ADMIN_PASSWORD = "admin123";
     public UserService() {
         this.wm.RegisterUser("Omar089", "omar@gmail.com", "1234");
         this.wm.RegisterUser("VicPin", "victor@gmail.com", "5678");
@@ -228,6 +229,87 @@ public class UserService {
         WebManagerImpl.getInstance().actualizarContrasena(usuario, nuevaContrasena);
         return Response.ok("{\"status\":true, \"message\":\"Contraseña actualizada correctamente\"}")
                 .build();
+    }
+    @POST
+    @Path("/eliminarUsuarioAdmin")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response eliminarUsuarioAdmin(
+            @FormParam("usuario") String usuario,
+            @FormParam("adminPassword") String adminPassword) {
+
+        if (!ADMIN_PASSWORD.equals(adminPassword)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Contraseña de administrador incorrecta\"}")
+                    .build();
+        }
+
+        boolean eliminado = WebManagerImpl.getInstance().eliminarUsuario(usuario);
+        if (eliminado) {
+            return Response.ok("{\"status\":true, \"message\":\"Usuario eliminado correctamente\"}").build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                    .build();
+        }
+    }
+
+    @POST
+    @Path("/actualizarUsuarioAdmin")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarUsuarioAdmin(
+            @FormParam("usuario") String usuario,
+            @FormParam("nuevoUsuario") String nuevoUsuario,
+            @FormParam("adminPassword") String adminPassword) {
+
+        if (!ADMIN_PASSWORD.equals(adminPassword)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Contraseña de administrador incorrecta\"}")
+                    .build();
+        }
+
+        boolean actualizado = WebManagerImpl.getInstance().actualizarUsuario(usuario, nuevoUsuario);
+        return Response.ok("{\"status\":" + actualizado + ", \"message\":\"Usuario actualizado\"}").build();
+    }
+
+
+    @POST
+    @Path("/actualizarCorreoAdmin")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarCorreoAdmin(
+            @FormParam("usuario") String usuario,
+            @FormParam("nuevoCorreo") String nuevoCorreo,
+            @FormParam("adminPassword") String adminPassword) {
+
+        if (!ADMIN_PASSWORD.equals(adminPassword)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Contraseña de administrador incorrecta\"}")
+                    .build();
+        }
+
+        boolean actualizado = WebManagerImpl.getInstance().actualizarCorreo(usuario, nuevoCorreo);
+        return Response.ok("{\"status\":" + actualizado + ", \"message\":\"Correo actualizado\"}").build();
+    }
+
+    @POST
+    @Path("/actualizarContrasenaAdmin")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarContrasenaAdmin(
+            @FormParam("usuario") String usuario,
+            @FormParam("nuevaContrasena") String nuevaContrasena,
+            @FormParam("adminPassword") String adminPassword) {
+
+        if (!ADMIN_PASSWORD.equals(adminPassword)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Contraseña de administrador incorrecta\"}")
+                    .build();
+        }
+
+        boolean actualizado = WebManagerImpl.getInstance().actualizarContrasena(usuario, nuevaContrasena);
+        return Response.ok("{\"status\":" + actualizado + ", \"message\":\"Contraseña actualizada\"}").build();
     }
 
 
