@@ -5,22 +5,18 @@ $(document).ready(function () {
         event.preventDefault();
         const correo = $('#email').val().trim();
         const password = $('#password').val().trim();
-        if(!password && !correo){
-            $('#error-incompleto-login').show();
-            $('#email').addClass('is-invalid');
-            $('#password').addClass('is-invalid');
+        if(!password || !correo){
+            if (!correo) {
+                $('#error-cincompleto-login').show();
+                $('#email').addClass('is-invalid');
+            }
+            if (!password) {
+                $('#error-pincompleto-login').show();
+                $('#password').addClass('is-invalid');
+            }
             return;
         }
-        if (!correo) {
-            $('#error-cincompleto-login').show();
-            $('#email').addClass('is-invalid');
-            return;
-        }
-        if (!password) {
-            $('#error-pincompleto-login').show();
-            $('#password').addClass('is-invalid');
-            return;
-        }
+
 
         $.ajax({
             url: '/TocaBolas/users/login',
@@ -49,17 +45,13 @@ $(document).ready(function () {
     });
     $('#email').on('input', function () {
         $('#error-datos-login').hide();
-        $('#error-incompleto-login').hide();
-        $('#error-rincompleto-login').hide();
-        $('#error-pincompleto-login').hide();
+        $('#error-cincompleto-login').hide();
         $('#email').removeClass('is-invalid');
         $('#password').removeClass('is-invalid');
     });
 
     $('#password').on('input', function () {
         $('#error-datos-login').hide();
-        $('#error-incompleto-login').hide();
-        $('#error-rincompleto-login').hide();
         $('#error-pincompleto-login').hide();
         $('#email').removeClass('is-invalid');
         $('#password').removeClass('is-invalid');

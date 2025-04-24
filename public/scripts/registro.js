@@ -8,9 +8,22 @@ $(document).ready(function () { // Registro de usuario
         const password = $('#rpassword').val().trim();
 
         if (!usuario || !correo || !password) {
-            alert('Por favor completa todos los campos.');
+            if (!usuario) {
+                $('#error-uincompleto-reg').show();
+                $('#rusuario').addClass('is-invalid');
+            }
+            if (!correo) {
+                $('#error-cincompleto-reg').show();
+                $('#remail').addClass('is-invalid');
+            }
+            if (!password) {
+                $('#error-pincompleto-reg').show();
+                $('#rpassword').addClass('is-invalid');
+            }
             return;
         }
+
+
 
         $.ajax({
             url: '/TocaBolas/users/register',
@@ -45,11 +58,18 @@ $(document).ready(function () { // Registro de usuario
     });
     $('#rusuario').on('input', function () {
         $('#error-usuario-reg').hide();
+        $('#error-uincompleto-reg').hide();
         $('#rusuario').removeClass('is-invalid');
     });
 
     $('#remail').on('input', function () {
         $('#error-correo-reg').hide();
+        $('#error-cincompleto-reg').hide();
+        $('#remail').removeClass('is-invalid');
+    });
+    $('#rpassword').on('input', function () {
+        $('#error-pincompleto-reg').hide();
+        $('#error-pincompleto-reg').hide();
         $('#remail').removeClass('is-invalid');
     });
 });
