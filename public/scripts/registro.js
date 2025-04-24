@@ -32,10 +32,10 @@ $(document).ready(function () { // Registro de usuario
                     const response = JSON.parse(xhr.responseText);
                     if (response.message.includes("usuario")) {
                         $('#rusuario').addClass('is-invalid');
-                        $('#error-usuario').text(response.message).show();
+                        $('#error-usuario-reg').text(response.message).show();
                     } else if (response.message.includes("correo")) {
                         $('#remail').addClass('is-invalid');
-                        $('#error-correo').text(response.message).show();
+                        $('#error-correo-reg').text(response.message).show();
                     }
                 } else {
                     alert('Error en el registro, comprueba los datos.');
@@ -44,12 +44,12 @@ $(document).ready(function () { // Registro de usuario
         });
     });
     $('#rusuario').on('input', function () {
-        $('#error-usuario').hide();
+        $('#error-usuario-reg').hide();
         $('#rusuario').removeClass('is-invalid');
     });
 
     $('#remail').on('input', function () {
-        $('#error-correo').hide();
+        $('#error-correo-reg').hide();
         $('#remail').removeClass('is-invalid');
     });
 });

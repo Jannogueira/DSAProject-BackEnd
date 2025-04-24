@@ -19,8 +19,8 @@ $(document).ready(function () {
         });
     }
     // Redirección según estado de login
-    const protectedUnlogedPages = ['store.html'];
-    const protectedLogedPages = ['login.html', 'registro.html'];
+    const protectedUnlogedPages = ['store.html', 'store'];
+    const protectedLogedPages = ['login.html', 'registro.html', 'registro', 'login'];
 
     if (user && protectedLogedPages.includes(currentPage)) {
         window.location.href = "index.html";

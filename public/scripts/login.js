@@ -5,9 +5,20 @@ $(document).ready(function () {
         event.preventDefault();
         const correo = $('#email').val().trim();
         const password = $('#password').val().trim();
-
-        if (!correo || !password) {
-            alert('Por favor completa todos los campos.');
+        if(!password || !correo){
+            $('#error-incompleto-login').show();
+            $('#email').addClass('is-invalid');
+            $('#password').addClass('is-invalid');
+            return;
+        }
+        if (!correo) {
+            $('#error-incompleto-login').show();
+            $('#email').addClass('is-invalid');
+            return;
+        }
+        if (!password) {
+            $('#error-incompleto-login').show();
+            $('#password').addClass('is-invalid');
             return;
         }
 
@@ -30,9 +41,24 @@ $(document).ready(function () {
                 }, 3000);
             },
             error: function () {
-                alert('Error en el inicio de sesión, comprueba los datos.');
+                $('#error-datos-login').show();
+                $('#email').addClass('is-invalid');
+                $('#password').addClass('is-invalid');
             }
         });
     });
+    $('#email').on('input', function () {
+        $('#error-datos-login').hide();
+        $('#error-incompleto-login').hide();
+        $('#email').removeClass('is-invalid');
+        $('#password').removeClass('is-invalid');
+    });
 
+    $('#password').on('input', function () {
+        $('#error-datos-login').hide();
+        $('#error-incompleto-login').hide();
+        $('#error-incompleto-login').hide();
+        $('#email').removeClass('is-invalid');
+        $('#password').removeClass('is-invalid');
+    });
 });

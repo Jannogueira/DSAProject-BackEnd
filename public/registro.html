@@ -65,12 +65,12 @@
         <div class="mb-3">
           <label for="rusuario" class="form-label"><b>Usuario</b></label>
           <input type="text" class="form-control" id="rusuario" placeholder="Tu usuario">
-          <div id="error-usuario" class="text-danger" style="display: none;">ㅤUsuario no disponible</div>
+          <div id="error-usuario-reg" class="text-danger" style="display: none;">ㅤUsuario no disponible</div>
         </div>
         <div class="mb-3">
           <label for="remail" class="form-label"><b>Correo electrónico</b></label>
           <input type="email" class="form-control" id="remail" placeholder="ejemplo@gmail.com">
-          <div id="error-correo" class="text-danger" style="display: none;">ㅤCorreo ya registrado</div>
+          <div id="error-correo-reg" class="text-danger" style="display: none;">ㅤCorreo ya registrado</div>
         </div>
         <div class="mb-3">
           <label for="rpassword" class="form-label"><b>Contraseña</b></label>
@@ -80,7 +80,7 @@
         <div class="mb-3">
           <label for="rpassword2" class="form-label"><b>Confirmar Contraseña</b></label>
           <input type="password" class="form-control" id="rpassword2" placeholder="******">
-          <div id="error-contraseña" class="text-danger" style="display:none;">Las contraseñas no coinciden</div>
+          <div id="error-contraseña-reg" class="text-danger" style="display:none;">Las contraseñas no coinciden</div>
         </div>
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" id="terminos" onchange="abrirRegistro()">
@@ -109,7 +109,7 @@
 
   const rpassword = document.getElementById('rpassword');
   const rpassword2 = document.getElementById('rpassword2');
-  const errorMessage = document.getElementById('error-contraseña');
+  const errorMessage = document.getElementById('error-contraseña-reg');
   const form = document.getElementById('myForm');
   const submitButton = document.getElementById('btnRegistro');
   const terminosCheckbox = document.getElementById('terminos');

@@ -20,6 +20,10 @@ public class CustomStaticHttpHandler extends HttpHandler {
 
         File file = new File(basePath, path);
 
+        // Si la URL es del tipo /usuario/xxx, carga usuario.html olvidando el parámetro de después de la barra
+        if (path.startsWith("usuario/")) {
+            file = new File(basePath, "usuario.html");
+        }
         // 👉 Si no tiene extensión, intenta con .html
         if (!file.exists() && !path.contains(".") && !path.endsWith("/")) {
             file = new File(basePath, path + ".html");
