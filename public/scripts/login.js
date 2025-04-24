@@ -5,19 +5,19 @@ $(document).ready(function () {
         event.preventDefault();
         const correo = $('#email').val().trim();
         const password = $('#password').val().trim();
-        if(!password || !correo){
+        if(!password && !correo){
             $('#error-incompleto-login').show();
             $('#email').addClass('is-invalid');
             $('#password').addClass('is-invalid');
             return;
         }
         if (!correo) {
-            $('#error-incompleto-login').show();
+            $('#error-cincompleto-login').show();
             $('#email').addClass('is-invalid');
             return;
         }
         if (!password) {
-            $('#error-incompleto-login').show();
+            $('#error-pincompleto-login').show();
             $('#password').addClass('is-invalid');
             return;
         }
@@ -50,6 +50,8 @@ $(document).ready(function () {
     $('#email').on('input', function () {
         $('#error-datos-login').hide();
         $('#error-incompleto-login').hide();
+        $('#error-rincompleto-login').hide();
+        $('#error-pincompleto-login').hide();
         $('#email').removeClass('is-invalid');
         $('#password').removeClass('is-invalid');
     });
@@ -57,7 +59,8 @@ $(document).ready(function () {
     $('#password').on('input', function () {
         $('#error-datos-login').hide();
         $('#error-incompleto-login').hide();
-        $('#error-incompleto-login').hide();
+        $('#error-rincompleto-login').hide();
+        $('#error-pincompleto-login').hide();
         $('#email').removeClass('is-invalid');
         $('#password').removeClass('is-invalid');
     });
