@@ -18,9 +18,11 @@ public class UserService {
     WebManagerImpl wm = WebManagerImpl.getInstance();
     private static final String ADMIN_PASSWORD = "admin123";
     public UserService() {
-        this.wm.RegisterUser("Omar089", "omar@gmail.com", "1234");
-        this.wm.RegisterUser("VicPin", "victor@gmail.com", "5678");
-        this.wm.RegisterUser("Jan", "jan@gmail.com", "123");
+        if (wm.getAllUsers().isEmpty()) {
+            this.wm.RegisterUser("Omar089", "omar@gmail.com", "1234");
+            this.wm.RegisterUser("VicPin", "victor@gmail.com", "5678");
+            this.wm.RegisterUser("Jan", "jan@gmail.com", "123");
+        }
 
     }
 
@@ -100,15 +102,25 @@ public class UserService {
 
         String token = tokenHeader.substring("Bearer ".length());
 
-        boolean valid = JwtUtil.validateToken(token);
-        if (valid) {
-            System.out.println("Token valido");
-            return Response.ok("{\"valid\":true}").build();
-        } else {
+        if (!JwtUtil.validateToken(token)) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("{\"valid\":false, \"message\":\"Token inválido o expirado\"}")
                     .build();
         }
+
+        // Extraer usuario del token
+        String usuario = JwtUtil.getUsernameFromToken(token);
+
+        // Verificar que el usuario aún exista
+        if (!wm.existeUser(usuario)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"valid\":false, \"message\":\"Usuario ya no existe\"}")
+                    .build();
+        }
+
+        // Todo OK
+        System.out.println("Token de usuario: " + usuario +" valido");
+        return Response.ok("{\"valid\":true}").build();
     }
 
     @PUT

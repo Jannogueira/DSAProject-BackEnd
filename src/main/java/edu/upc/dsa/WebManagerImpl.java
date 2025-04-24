@@ -109,6 +109,7 @@ public class WebManagerImpl implements WebManager {
     public boolean eliminarUsuario(String usuario){
         if(existeUser(usuario)){
             users.remove(getUser(usuario));
+            return true;
         }
         return false;
     }
@@ -116,6 +117,7 @@ public class WebManagerImpl implements WebManager {
     public boolean actualizarUsuario(String usuario, String nuevoUsuario){
         if(existeUser(usuario)){
             getUser(usuario).setUsuario(nuevoUsuario);
+            return true;
         }
         return false;
     }
@@ -123,6 +125,7 @@ public class WebManagerImpl implements WebManager {
     public boolean actualizarCorreo(String usuario, String nuevoCorreo){
         if(existeUser(usuario)){
             getUser(usuario).setUsuario(nuevoCorreo);
+            return true;
         }
         return false;
     }
@@ -130,6 +133,7 @@ public class WebManagerImpl implements WebManager {
     public boolean actualizarContrasena(String usuario, String nuevaContrasena){
         if(existeUser(usuario)){
             getUser(usuario).setPassword(nuevaContrasena);
+            return true;
         }
         return false;
     }
