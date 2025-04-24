@@ -93,4 +93,46 @@ public class WebManagerImpl implements WebManager {
     public List<User> getAllUsers() {
         return this.users;
     }
+
+    @Override
+    public User getUser(String usuario) {
+        if(existeUser(usuario)){
+            for (User u : users) {
+                if (u.getUsario().equals(usuario))
+                    return u;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean eliminarUsuario(String usuario){
+        if(existeUser(usuario)){
+            users.remove(getUser(usuario));
+        }
+        return false;
+    }
+    @Override
+    public boolean actualizarUsuario(String usuario, String nuevoUsuario){
+        if(existeUser(usuario)){
+            getUser(usuario).setUsuario(nuevoUsuario);
+        }
+        return false;
+    }
+    @Override
+    public boolean actualizarCorreo(String usuario, String nuevoCorreo){
+        if(existeUser(usuario)){
+            getUser(usuario).setUsuario(nuevoCorreo);
+        }
+        return false;
+    }
+    @Override
+    public boolean actualizarContrasena(String usuario, String nuevaContrasena){
+        if(existeUser(usuario)){
+            getUser(usuario).setPassword(nuevaContrasena);
+        }
+        return false;
+    }
+
+
 }

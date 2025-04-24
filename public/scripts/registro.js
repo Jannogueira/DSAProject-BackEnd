@@ -70,6 +70,6 @@ $(document).ready(function () { // Registro de usuario
     $('#rpassword').on('input', function () {
         $('#error-pincompleto-reg').hide();
         $('#error-pincompleto-reg').hide();
-        $('#remail').removeClass('is-invalid');
+        $('#rpassword').removeClass('is-invalid');
     });
 });

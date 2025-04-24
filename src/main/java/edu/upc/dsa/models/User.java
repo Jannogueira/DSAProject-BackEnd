@@ -24,8 +24,8 @@ public class User {
         return password;
     }
 
-    public void setUsario(String usario) {
-        this.usuario = usario;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
     public void setCorreo(String correo) {
         this.correo = correo;

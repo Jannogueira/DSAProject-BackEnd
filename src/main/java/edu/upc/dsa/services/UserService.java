@@ -110,5 +110,126 @@ public class UserService {
         }
     }
 
+    @PUT
+    @Path("/actualizarUsuario")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response actualizarUsuario(
+            @HeaderParam("Authorization") String tokenHeader,
+            @FormParam("nuevoUsuario") String nuevoUsuario) {
+
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer "))
+            return Response.status(Response.Status.UNAUTHORIZED).entity("{\"status\":false, \"message\":\"Token no válido\"}").build();
+
+        String token = tokenHeader.substring("Bearer ".length());
+        String usuario = JwtUtil.getUsernameFromToken(token);
+
+        if (wm.actualizarUsuario(usuario, nuevoUsuario)) {
+            return Response.ok("{\"status\":true, \"message\":\"Usuario actualizado\"}").build();
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"status\":false, \"message\":\"Error al actualizar usuario\"}").build();
+    }
+
+
+    @PUT
+    @Path("/actualizarCorreo")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response actualizarCorreo(
+            @HeaderParam("Authorization") String tokenHeader,
+            @FormParam("nuevoCorreo") String nuevoCorreo) {
+
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer "))
+            return Response.status(Response.Status.UNAUTHORIZED).entity("{\"status\":false, \"message\":\"Token no válido\"}").build();
+
+        String token = tokenHeader.substring("Bearer ".length());
+        String usuario = JwtUtil.getUsernameFromToken(token);
+
+        if (wm.actualizarCorreo(usuario, nuevoCorreo)) {
+            return Response.ok("{\"status\":true, \"message\":\"Correo actualizado\"}").build();
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"status\":false, \"message\":\"Error al actualizar correo\"}").build();
+    }
+
+    @POST
+    @Path("/eliminarUsuario")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response eliminarUsuario(
+            @HeaderParam("Authorization") String tokenHeader,
+            @FormParam("contrasena") String contrasena) {
+
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token no proporcionado o inválido\"}")
+                    .build();
+        }
+
+        String token = tokenHeader.substring("Bearer ".length());
+        if (!JwtUtil.validateToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token inválido o expirado\"}")
+                    .build();
+        }
+
+        String usuario = JwtUtil.getUsernameFromToken(token);
+        User user = WebManagerImpl.getInstance().getUser(usuario);
+
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                    .build();
+        }
+
+        if (!user.getPassword().equals(contrasena)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Contraseña incorrecta\"}")
+                    .build();
+        }
+
+        WebManagerImpl.getInstance().eliminarUsuario(usuario);
+        return Response.ok("{\"status\":true, \"message\":\"Usuario eliminado correctamente\"}").build();
+    }
+    @POST
+    @Path("/actualizarContrasena")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarContrasena(
+            @HeaderParam("Authorization") String tokenHeader,
+            @FormParam("contrasenaActual") String contrasenaActual,
+            @FormParam("nuevaContrasena") String nuevaContrasena) {
+
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token no proporcionado o inválido\"}")
+                    .build();
+        }
+
+        String token = tokenHeader.substring("Bearer ".length());
+        if (!JwtUtil.validateToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token inválido o expirado\"}")
+                    .build();
+        }
+
+        String usuario = JwtUtil.getUsernameFromToken(token);
+        User user = WebManagerImpl.getInstance().getUser(usuario);
+
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                    .build();
+        }
+
+        if (!user.getPassword().equals(contrasenaActual)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Contraseña actual incorrecta\"}")
+                    .build();
+        }
+
+        WebManagerImpl.getInstance().actualizarContrasena(usuario, nuevaContrasena);
+        return Response.ok("{\"status\":true, \"message\":\"Contraseña actualizada correctamente\"}")
+                .build();
+    }
+
+
 
 }

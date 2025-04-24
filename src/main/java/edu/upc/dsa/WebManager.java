@@ -20,4 +20,9 @@ public interface WebManager {
     public void addShopItem(ShopItem item);
 
     public List<User> getAllUsers();
+    public User getUser(String usuario);
+    public boolean eliminarUsuario(String usuario);
+    public boolean actualizarUsuario(String usuario, String nuevoUsuario);
+    public boolean actualizarCorreo(String usuario, String nuevoCorreo);
+    public boolean actualizarContrasena(String usuario, String nuevaContrasena);
 }
