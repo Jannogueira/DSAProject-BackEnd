@@ -323,6 +323,44 @@ public class UserService {
         boolean actualizado = WebManagerImpl.getInstance().actualizarContrasena(usuario, nuevaContrasena);
         return Response.ok("{\"status\":" + actualizado + ", \"message\":\"Contraseña actualizada\"}").build();
     }
+    @GET
+    @Path("/correoPorToken")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCorreoPorToken(@HeaderParam("Authorization") String tokenHeader) {
+        // Verifica si el token está presente y tiene el formato adecuado
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token no proporcionado o inválido\"}")
+                    .build();
+        }
+
+        // Extrae el token de la cabecera
+        String token = tokenHeader.substring("Bearer ".length());
+
+        // Valida el token
+        if (!JwtUtil.validateToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token inválido o expirado\"}")
+                    .build();
+        }
+
+        // Extrae el nombre de usuario del token
+        String username = JwtUtil.getUsernameFromToken(token);
+
+        // Busca al usuario en el sistema usando el nombre de usuario
+        User user = WebManagerImpl.getInstance().getUser(username);
+
+        // Verifica si el usuario existe
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                    .build();
+        }
+
+        // Devuelve el correo del usuario en la respuesta
+        return Response.ok("{\"status\":true, \"email\":\"" + user.getCorreo() + "\"}")
+                .build();
+    }
 
 
 

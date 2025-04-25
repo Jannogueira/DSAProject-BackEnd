@@ -137,6 +137,14 @@ public class WebManagerImpl implements WebManager {
         }
         return false;
     }
+    @Override
+    public String getCorreo(String usuario){
+        if(existeUser(usuario)){
+
+            return getUser(usuario).getCorreo();
+        }
+        return null;
+    }
 
 
 }

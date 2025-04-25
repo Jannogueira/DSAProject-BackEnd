@@ -1,5 +1,6 @@
 package edu.upc.dsa.util;
 
+import edu.upc.dsa.WebManagerImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -41,5 +42,12 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
+    }
+
+    public static String getEmailFromToken(String token) {
+        String username = getUsernameFromToken(token);
+        WebManagerImpl wm = WebManagerImpl.getInstance();
+        // Obtener el correo de usuario usando el nombre de usuario
+        return wm.getCorreo(username); // Devuelve el correo del usuario
     }
 }
