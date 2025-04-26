@@ -744,3 +744,13 @@
 .cuenta-underline:hover {
   color: #007bff; /* Cambia el color del texto al pasar el ratón */
 }
+.cuadro-cuenta {
+  display: flex;
+  width: 700px;
+  min-height: 400px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  overflow: visible;
+  background-color: white;
+  margin: 0 auto;
+}

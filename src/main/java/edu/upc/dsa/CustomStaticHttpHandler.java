@@ -20,11 +20,8 @@ public class CustomStaticHttpHandler extends HttpHandler {
 
         File file = new File(basePath, path);
 
-        System.out.println("URI original: " + uri);
-        System.out.println("Path limpio: " + path);
         // Si la URL es del tipo /usuario/xxx, carga usuario.html olvidando el parámetro de después de la barra
         if (path.startsWith("cuenta/") || path.equals("cuenta") ) {
-            System.out.println("Redirigiendo a cuenta.html");
             file = new File(basePath, "cuenta.html");
         }
         // 👉 Si no tiene extensión, intenta con .html

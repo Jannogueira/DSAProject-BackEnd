@@ -126,21 +126,41 @@ public class UserService {
     @PUT
     @Path("/actualizarUsuario")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response actualizarUsuario(
             @HeaderParam("Authorization") String tokenHeader,
             @FormParam("nuevoUsuario") String nuevoUsuario) {
 
-        if (tokenHeader == null || !tokenHeader.startsWith("Bearer "))
-            return Response.status(Response.Status.UNAUTHORIZED).entity("{\"status\":false, \"message\":\"Token no válido\"}").build();
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token no válido\"}").build();
+        }
 
         String token = tokenHeader.substring("Bearer ".length());
         String usuario = JwtUtil.getUsernameFromToken(token);
 
-        if (wm.actualizarUsuario(usuario, nuevoUsuario)) {
-            return Response.ok("{\"status\":true, \"message\":\"Usuario actualizado\"}").build();
+        // Aquí ya hacemos la verificación de existencia del nuevo usuario
+        if (wm.existeUser(nuevoUsuario)) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity("{\"status\":false, \"message\":\"El nombre de usuario ya está en uso\"}")
+                    .build();
         }
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"status\":false, \"message\":\"Error al actualizar usuario\"}").build();
+
+        // Si no existe, procedemos a actualizar
+        boolean actualizado = wm.actualizarUsuario(usuario, nuevoUsuario);
+
+        if (actualizado) {
+            // Si se actualizó exitosamente, generamos nuevo token
+            String nuevoToken = JwtUtil.generateToken(nuevoUsuario);
+            return Response.ok("{\"status\":true, \"message\":\"Usuario actualizado\", \"newToken\":\"" + nuevoToken + "\"}")
+                    .build();
+        }
+
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("{\"status\":false, \"message\":\"Error al actualizar usuario\"}")
+                .build();
     }
+
 
 
     @PUT
