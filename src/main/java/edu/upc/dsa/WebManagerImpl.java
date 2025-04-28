@@ -15,9 +15,9 @@ public class WebManagerImpl implements WebManager {
     private WebManagerImpl() {
         users = new ArrayList<User>();
         List<ShopItem> items = new ArrayList<>();
-        items.add(new ShopItem("bomba", "Objeto para explotar cualquier bola a tu alrededor!"));
-        items.add(new ShopItem("delete", "Elimina una simple bola o incluso una bola grande!"));
-        items.add(new ShopItem("oro", "Multiplica x2 tu oro obtenida durante 30 minutos!"));
+        items.add(new ShopItem("bomba", "Objeto para explotar cualquier bola a tu alrededor!", "https://drive.google.com/file/d/1E1K5wNHPy4_AUfZXNLffNEqD95LOcLbE/view?usp=drive_link"));
+        items.add(new ShopItem("delete", "Elimina una simple bola o incluso una bola grande!", "https://drive.google.com/file/d/1nXQB1rSdX9NW7bXdYJ3dkqZJvrpSrDpo/view?usp=drive_link"));
+        items.add(new ShopItem("oro", "Multiplica x2 tu oro obtenida durante 30 minutos!", "https://drive.google.com/file/d/1wtb2F-WLKAJ8Io0-ge5dDrJlYfXLyS9_/view?usp=drive_link"));
         shop = new Shop(items);
 
     }
