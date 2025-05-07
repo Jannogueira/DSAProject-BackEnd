@@ -13,7 +13,7 @@ import edu.upc.dsa.models.User;
 import java.util.List;
 
 @Api(value = "/users", description = "Endpoint for user registration and login")
-@Path("/users")
+@Path("")
 public class UserService {
     WebManagerImpl wm = WebManagerImpl.getInstance();
     private static final String ADMIN_PASSWORD = "admin123";
@@ -48,7 +48,7 @@ public class UserService {
 
         switch (registro) {
             case 1: // Registro exitoso
-                return Response.ok("{\"status\":true, \"message\":\"Registro Completado\"}")
+                return Response.ok("{\"status\":true, \"message\":\"Registro Completado\", \"username\":\"" + username + "\", \"correo\":\"" + correo + "\"}")
                         .type(MediaType.APPLICATION_JSON).build();
             case 2: // Usuario ya existe
                 return Response.status(Response.Status.CONFLICT)
@@ -81,7 +81,7 @@ public class UserService {
             String usuario = wm.usuarioPorCorreo(correo);
             String token = JwtUtil.generateToken(usuario);
             System.out.println("login correcto: " + usuario + " token: " + token);
-            return Response.ok("{\"status\":true, \"message\":\"Login exitoso\", \"user\":\"" + usuario + "\", \"token\":\"" + token + "\"}")
+            return Response.ok("{\"status\":true, \"message\":\"Login exitoso\", \"user\":\"" + usuario + "\", \"token\":\"" + token + "\", \"correo\":\"" + correo + "\"}")
                     .type(MediaType.APPLICATION_JSON).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED)

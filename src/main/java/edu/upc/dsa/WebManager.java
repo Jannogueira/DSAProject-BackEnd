@@ -26,4 +26,5 @@ public interface WebManager {
     public boolean actualizarCorreo(String usuario, String nuevoCorreo);
     public boolean actualizarContrasena(String usuario, String nuevaContrasena);
     public String getCorreo(String usuario);
+    public String getUsername(String correo);
 }

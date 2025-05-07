@@ -146,5 +146,14 @@ public class WebManagerImpl implements WebManager {
         return null;
     }
 
+    @Override
+    public String getUsername(String correo){
+        for (User u : users) {
+            if (u.getCorreo().equals(correo)){
+                return u.getUsario();
+            }
+        }
+        return null;
+    }
 
 }
