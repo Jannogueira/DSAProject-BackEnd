@@ -31,6 +31,7 @@ public class ShopService {
     @ApiOperation(value = "Get all shop items", notes = "Returns a list of all available shop items")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ShopItem> getShopItems() {
+        System.out.println("Shop Items are available!");
         return wm.getAllShopItems();
     }
 
