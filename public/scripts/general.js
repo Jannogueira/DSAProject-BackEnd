@@ -6,7 +6,7 @@ $(document).ready(function () {
     // Verificación del token en cada carga
     if (token) {
         $.ajax({
-            url: '/TocaBolas/users/validate',
+            url: '/TocaBolas/validate',
             method: 'GET',
             headers: {'Authorization': 'Bearer ' + token},
             success: function () {

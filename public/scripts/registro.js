@@ -26,7 +26,7 @@ $(document).ready(function () { // Registro de usuario
 
 
         $.ajax({
-            url: '/TocaBolas/users/register',
+            url: '/TocaBolas/register',
             method: 'POST',
             data: { username: usuario, correo, password },
             headers: {

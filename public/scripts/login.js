@@ -19,7 +19,7 @@ $(document).ready(function () {
 
 
         $.ajax({
-            url: '/TocaBolas/users/login',
+            url: '/TocaBolas/login',
             method: 'POST',
             data: { correo, password },
             headers: {
