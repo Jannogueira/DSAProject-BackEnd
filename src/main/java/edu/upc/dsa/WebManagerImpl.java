@@ -130,11 +130,6 @@ public class WebManagerImpl implements WebManager {
 
     @Override
     public User getUser(String usuario) {
-
-        User user = session.get(Usuario.class, usuario);
-
-
-
         try (Connection conn = DBUtils.getConnection()) {
             String sql = "SELECT * FROM users WHERE usuario = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
