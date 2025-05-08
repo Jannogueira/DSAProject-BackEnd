@@ -9,7 +9,7 @@ $(document).ready(function () {
 
         // Obtener el correo asociado al token
         $.ajax({
-            url: '/TocaBolas/users/correoPorToken', // Aquí debe estar la ruta para obtener el correo
+            url: '/TocaBolas/correoPorToken', // Aquí debe estar la ruta para obtener el correo
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + token,
@@ -36,7 +36,7 @@ $(document).ready(function () {
         const token = localStorage.getItem("token");
 
         $.ajax({
-            url: '/TocaBolas/users/eliminarUsuario',
+            url: '/TocaBolas/eliminarUsuario',
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + token,
@@ -68,7 +68,7 @@ $(document).ready(function () {
         if (!nuevoNombre) return;
 
         $.ajax({
-            url: '/TocaBolas/users/actualizarUsuario',
+            url: '/TocaBolas/actualizarUsuario',
             method: 'PUT',
             data: {
                 nuevoUsuario: nuevoNombre
@@ -103,7 +103,7 @@ $(document).ready(function () {
         if (!nuevoCorreo) return;
 
         $.ajax({
-            url: '/TocaBolas/users/actualizarCorreo',
+            url: '/TocaBolas/actualizarCorreo',
             method: 'PUT',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("token")
@@ -190,7 +190,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: '/TocaBolas/users/actualizarContrasena',
+            url: '/TocaBolas/actualizarContrasena',
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + token,
