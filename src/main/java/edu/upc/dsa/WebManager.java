@@ -11,7 +11,6 @@ public interface WebManager {
 
     public Boolean existeUser(String user);
     public Boolean existeEmail(String email);
-    public String usuarioPorCorreo(String email);
 
     public Boolean LoginUser(String correo, String password);
 

@@ -18,12 +18,6 @@ public class UserService {
     WebManagerImpl wm = WebManagerImpl.getInstance();
     private static final String ADMIN_PASSWORD = "admin123";
     public UserService() {
-        if (wm.getAllUsers().isEmpty()) {
-            this.wm.RegisterUser("Omar089", "omar@gmail.com", "1234");
-            this.wm.RegisterUser("VicPin", "victor@gmail.com", "5678");
-            this.wm.RegisterUser("Jan", "jan@gmail.com", "123");
-        }
-
     }
 
     @Path("users")
@@ -75,10 +69,10 @@ public class UserService {
     public Response login(
             @ApiParam(value = "Email", required = true) @FormParam("correo") String correo,
             @ApiParam(value = "Password", required = true) @FormParam("password") String password) {
-
+        System.out.println("Entró al login");
         boolean success = wm.LoginUser(correo, password);
         if (success) {
-            String usuario = wm.usuarioPorCorreo(correo);
+            String usuario = wm.getUsername(correo);
             String token = JwtUtil.generateToken(usuario);
             System.out.println("login correcto: " + usuario + " token: " + token);
             return Response.ok("{\"status\":true, \"message\":\"Login exitoso\", \"user\":\"" + usuario + "\", \"token\":\"" + token + "\", \"correo\":\"" + correo + "\"}")
