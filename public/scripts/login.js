@@ -34,7 +34,7 @@ $(document).ready(function () {
                 $('#uiverse-login').show();
                 setTimeout(function() {
                     window.location.href = "index";
-                }, 3000);
+                }, 1500);
             },
             error: function () {
                 $('#error-datos-login').show();

@@ -25,7 +25,7 @@ public class UserService {
     @ApiOperation(value = "Get All Users")
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getAllUsers() {
-        return WebManagerImpl.getInstance().getAllUsers();
+        return wm.getAllUsers();
     }
 
 
@@ -67,9 +67,9 @@ public class UserService {
     @ApiOperation(value = "Login a user", notes = "Provide email and password")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response login(
+
             @ApiParam(value = "Email", required = true) @FormParam("correo") String correo,
             @ApiParam(value = "Password", required = true) @FormParam("password") String password) {
-        System.out.println("Entró al login");
         boolean success = wm.LoginUser(correo, password);
         if (success) {
             String usuario = wm.getUsername(correo);

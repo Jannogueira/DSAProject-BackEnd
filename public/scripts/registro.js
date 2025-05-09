@@ -38,7 +38,7 @@ $(document).ready(function () { // Registro de usuario
                 $('#uiverse-registro').show();
                 setTimeout(function() {
                     window.location.href = "login";
-                }, 3500);
+                }, 1500);
             },
             error: function (xhr) {
                 if (xhr.status === 409) {

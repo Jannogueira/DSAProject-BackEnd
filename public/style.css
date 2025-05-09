@@ -668,7 +668,7 @@
   border-right: 0.2em solid;
   color: #13A5C3;
   animation:
-          typeAndDelete 6s steps(19) infinite,
+          typeAndDelete 3s steps(19) infinite,
           blinkCursor 0.5s step-end infinite alternate;
   margin-top: 1.5em;
 }
