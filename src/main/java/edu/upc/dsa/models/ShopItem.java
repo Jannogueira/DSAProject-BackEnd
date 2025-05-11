@@ -4,11 +4,13 @@ public class ShopItem {
     String name;
     String description;
     String url_icon;
+    int price;
 
-    public ShopItem(String name, String description, String url_icon) {
+    public ShopItem(String name, String description, String url_icon, int price) {
         this.name = name;
         this.description = description;
         this.url_icon = url_icon;
+        this.price = price;
     }
     public ShopItem(){}
 
@@ -19,4 +21,6 @@ public class ShopItem {
     public String getDescription() {return description;}
     public void setUrl_icon(String url_icon) {this.url_icon = url_icon;}
     public String getUrl_icon() {return url_icon;}
+    public void setPrice(int price) {this.price = price;}
+    public int getPrice() {return price;}
 }
