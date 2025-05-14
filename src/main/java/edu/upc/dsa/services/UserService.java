@@ -5,11 +5,11 @@ import edu.upc.dsa.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import edu.upc.dsa.WebManagerImpl;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import edu.upc.dsa.models.User;
+import edu.upc.dsa.models.Users;
 import java.util.List;
 
 @Api(value = "/users", description = "Endpoint for user registration and login")
@@ -24,7 +24,7 @@ public class UserService {
     @GET
     @ApiOperation(value = "Get All Users")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getAllUsers() {
+    public List<Users> getAllUsers() {
         return wm.getAllUsers();
     }
 
@@ -198,15 +198,15 @@ public class UserService {
         }
 
         String usuario = JwtUtil.getUsernameFromToken(token);
-        User user = WebManagerImpl.getInstance().getUser(usuario);
+        Users users = WebManagerImpl.getInstance().getUser(usuario);
 
-        if (user == null) {
+        if (users == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
                     .build();
         }
 
-        if (!user.getPassword().equals(contrasena)) {
+        if (!users.getPassword().equals(contrasena)) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("{\"status\":false, \"message\":\"Contraseña incorrecta\"}")
                     .build();
@@ -238,15 +238,15 @@ public class UserService {
         }
 
         String usuario = JwtUtil.getUsernameFromToken(token);
-        User user = WebManagerImpl.getInstance().getUser(usuario);
+        Users users = WebManagerImpl.getInstance().getUser(usuario);
 
-        if (user == null) {
+        if (users == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
                     .build();
         }
 
-        if (!user.getPassword().equals(contrasenaActual)) {
+        if (!users.getPassword().equals(contrasenaActual)) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("{\"status\":false, \"message\":\"Contraseña actual incorrecta\"}")
                     .build();
@@ -362,17 +362,17 @@ public class UserService {
         String username = JwtUtil.getUsernameFromToken(token);
 
         // Busca al usuario en el sistema usando el nombre de usuario
-        User user = WebManagerImpl.getInstance().getUser(username);
+        Users users = WebManagerImpl.getInstance().getUser(username);
 
         // Verifica si el usuario existe
-        if (user == null) {
+        if (users == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
                     .build();
         }
 
         // Devuelve el correo del usuario en la respuesta
-        return Response.ok("{\"status\":true, \"email\":\"" + user.getCorreo() + "\"}")
+        return Response.ok("{\"status\":true, \"email\":\"" + users.getCorreo() + "\"}")
                 .build();
     }
 

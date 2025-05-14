@@ -13,7 +13,7 @@ import java.util.List;
 public class WebManagerImpl implements WebManager {
 
     private static WebManagerImpl instance;
-    private List<User> users;
+    private List<Users> users;
     private Shop shop;
     private WebManagerImpl() {
         users = new ArrayList<>();
@@ -36,64 +36,32 @@ public class WebManagerImpl implements WebManager {
     public int RegisterUser(String username, String correo, String password) {
         if (existeEmail(correo)) return 3;
         if (existeUser(username)) return 2;
-
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "INSERT INTO users (usuario, correo, password) VALUES (?, ?, ?)";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, username);
-            stmt.setString(2, correo);
-            stmt.setString(3, password);
-            stmt.executeUpdate();
-            return 1;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
-        }
+        System.out.println(username + " " + correo + " " + password);
+        Session session = GameSession.openSession();
+        Users users = new Users(username, correo, password);
+        session.save(users);
+        return 1;
     }
 
     @Override
     public Boolean existeUser(String user) {
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "SELECT COUNT(*) FROM users WHERE usuario = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, user);
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            return rs.getInt(1) > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Session session = GameSession.openSession();
+        Users u = session.getByField(Users.class, "usuario", user);
+        return u != null;
     }
 
     @Override
     public Boolean existeEmail(String email) {
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "SELECT COUNT(*) FROM users WHERE correo = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            return rs.getInt(1) > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Session session = GameSession.openSession();
+        Users u = session.getByField(Users.class, "correo", email);
+        return u != null;
     }
 
     @Override
     public Boolean LoginUser(String correo, String password) {
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "SELECT * FROM users WHERE correo = ? AND password = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, correo);
-            stmt.setString(2, password);
-            ResultSet rs = stmt.executeQuery();
-            return rs.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Session session = GameSession.openSession();
+        Users user = session.getByField(Users.class, "correo", correo);
+        return user != null && user.getPassword().equals(password);
     }
 
     @Override
@@ -107,135 +75,74 @@ public class WebManagerImpl implements WebManager {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        List<User> userList = new ArrayList<>();
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "SELECT * FROM users";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                userList.add(new User(
-                        rs.getInt("id"),
-                        rs.getString("usuario"),
-                        rs.getString("correo"),
-                        rs.getString("password"),
-                        rs.getInt("score"),
-                        rs.getInt("money")
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public List<Users> getAllUsers() {
+        Session session = GameSession.openSession();
+        List<Object> objs = session.findAll(Users.class);
+        List<Users> usersList = new ArrayList<>();
+        for (Object o : objs) {
+            usersList.add((Users) o);
         }
-        return userList;
+        return usersList;
     }
 
     @Override
-    public User getUser(String usuario) {
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "SELECT * FROM users WHERE usuario = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, usuario);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("usuario"),
-                        rs.getString("correo"),
-                        rs.getString("password"),
-                        rs.getInt("score"),
-                        rs.getInt("money")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public Users getUser(String username) {
+        Session session = GameSession.openSession();
+        return session.getByField(Users.class, "usuario", username);
     }
 
     @Override
     public boolean eliminarUsuario(String usuario) {
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "DELETE FROM users WHERE usuario = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, usuario);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Session session = GameSession.openSession();
+        Users user = session.getByField(Users.class, "usuario", usuario);
+        if (user == null) return false;
+        session.delete(user);
+        return true;
     }
 
     @Override
     public boolean actualizarUsuario(String usuario, String nuevoUsuario) {
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "UPDATE users SET usuario = ? WHERE usuario = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, nuevoUsuario);
-            stmt.setString(2, usuario);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Session session = GameSession.openSession();
+        Users user = getUser(usuario);
+        if (user == null) {
             return false;
         }
+        user.setUsuario(nuevoUsuario);
+        session.update(user);
+        return true;
     }
 
     @Override
     public boolean actualizarCorreo(String usuario, String nuevoCorreo) {
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "UPDATE users SET correo = ? WHERE usuario = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, nuevoCorreo);
-            stmt.setString(2, usuario);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Session session = GameSession.openSession();
+        Users user = session.getByField(Users.class, "usuario", usuario);
+        if (user == null) return false;
+        user.setCorreo(nuevoCorreo);
+        session.update(user);
+        return true;
     }
 
     @Override
     public boolean actualizarContrasena(String usuario, String nuevaContrasena) {
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "UPDATE users SET password = ? WHERE usuario = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, nuevaContrasena);
-            stmt.setString(2, usuario);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Session session = GameSession.openSession();
+        Users user = session.getByField(Users.class, "usuario", usuario);
+        if (user == null) return false;
+        user.setPassword(nuevaContrasena);
+        session.update(user);
+        return true;
     }
 
     @Override
     public String getCorreo(String usuario) {
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "SELECT correo FROM users WHERE usuario = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, usuario);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("correo");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        Session session = GameSession.openSession();
+        Users user = session.getByField(Users.class, "usuario", usuario);
+        return (user != null) ? user.getCorreo() : null;
     }
 
     @Override
     public String getUsername(String correo) {
-        try (Connection conn = DBUtils.getConnection()) {
-            String sql = "SELECT usuario FROM users WHERE correo = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, correo);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("usuario");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        Session session = GameSession.openSession();
+        Users user = session.getByField(Users.class, "correo", correo);
+        return (user != null) ? user.getUsuario() : null;
     }
 }
