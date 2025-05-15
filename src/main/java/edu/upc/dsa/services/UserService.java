@@ -38,7 +38,7 @@ public class UserService {
             @ApiParam(value = "Email", required = true) @FormParam("correo") String correo,
             @ApiParam(value = "Password", required = true) @FormParam("password") String password) {
 
-        int registro = wm.RegisterUser(username, correo, password);
+        int registro = wm.registerUser(username, correo, password);
 
         switch (registro) {
             case 1: // Registro exitoso
@@ -70,7 +70,7 @@ public class UserService {
 
             @ApiParam(value = "Email", required = true) @FormParam("correo") String correo,
             @ApiParam(value = "Password", required = true) @FormParam("password") String password) {
-        boolean success = wm.LoginUser(correo, password);
+        boolean success = wm.loginUser(correo, password);
         if (success) {
             String usuario = wm.getUsername(correo);
             String token = JwtUtil.generateToken(usuario);

@@ -33,7 +33,7 @@ public class WebManagerImpl implements WebManager {
     }
 
     @Override
-    public int RegisterUser(String username, String correo, String password) {
+    public int registerUser(String username, String correo, String password) {
         if (existeEmail(correo)) return 3;
         if (existeUser(username)) return 2;
         System.out.println(username + " " + correo + " " + password);
@@ -58,7 +58,7 @@ public class WebManagerImpl implements WebManager {
     }
 
     @Override
-    public Boolean LoginUser(String correo, String password) {
+    public Boolean loginUser(String correo, String password) {
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "correo", correo);
         return user != null && user.getPassword().equals(password);

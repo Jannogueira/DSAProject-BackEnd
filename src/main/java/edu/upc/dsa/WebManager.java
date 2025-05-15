@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface WebManager {
 
-    public int RegisterUser(String username, String correo, String password);
+    public int registerUser(String username, String correo, String password);
 
     public Boolean existeUser(String user);
     public Boolean existeEmail(String email);
 
-    public Boolean LoginUser(String correo, String password);
+    public Boolean loginUser(String correo, String password);
 
     public List<ShopItem> getAllShopItems();
 
