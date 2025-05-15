@@ -18,9 +18,9 @@ public class WebManagerImpl implements WebManager {
     private WebManagerImpl() {
         users = new ArrayList<>();
         List<ShopItem> items = new ArrayList<>();
-        items.add(new ShopItem("bomba", "Objeto para explotar cualquier bola a tu alrededor!", "https://img.freepik.com/vector-premium/balas-canon-bomba-negra-dibujos-animados-lindo_634248-10.jpg", 300));
-        items.add(new ShopItem("delete", "Elimina una simple bola o incluso una bola grande!", "https://media.istockphoto.com/id/1282050925/es/vector/icono-de-destino-sobre-fondo-transparente.jpg?s=612x612&w=0&k=20&c=OLYEqH0fltogk4XcSOqB__Q9_YYM6kDOY1bQP0P2qI4=", 500));
-        items.add(new ShopItem("oro", "Multiplica x2 tu oro obtenida durante 30 minutos!", "https://img.freepik.com/vector-premium/bolsa-monedas-oro-moneda-oro-saco-antiguo-antiguo-ahorro-monedero-riqueza-oro-3d-realista_102902-1094.jpg", 1000));
+        items.add(new ShopItem("bomba", "Objeto para explotar cualquier bola a tu alrededor!", "http://dsa2.upc.edu/imagenes/bomba.jpg", 300));
+        items.add(new ShopItem("delete", "Elimina una simple bola o incluso una bola grande!", "http://dsa2.upc.edu/imagenes/delete.jpg", 500));
+        items.add(new ShopItem("oro", "Multiplica x2 tu oro obtenida durante 30 minutos!", "http://dsa2.upc.edu/imagenes/oro.jpg", 1000));
 
         shop = new Shop(items);
     }
