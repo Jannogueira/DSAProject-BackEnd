@@ -23,4 +23,5 @@ public class Shop {
     public void setItems(List<ShopItem> items) {
         this.items = items;
     }
+
 }

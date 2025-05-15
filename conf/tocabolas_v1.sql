@@ -37,15 +37,16 @@ CREATE TABLE IF NOT EXISTS `items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) DEFAULT NULL,
   `descripcion` varchar(250) DEFAULT NULL,
+  `url_icon` varchar(500) DEFAULT NULL,
   `precio` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Volcando datos para la tabla tocabolas.items: ~3 rows (aproximadamente)
-INSERT INTO `items` (`id`, `nombre`, `descripcion`, `precio`) VALUES
-	(1, 'Bomba', 'Objeto para explotar cualquier bola al a', 300),
-	(2, 'Delete', 'Elimina una simple bola o incluso una bola grande!', 500),
-	(3, 'Oro', 'Multiplica x2 tu oro obtenida durante 30 minutos!', 1000);
+INSERT INTO `items` (`id`, `nombre`, `descripcion`, `url_icon`, `precio`) VALUES
+	(1, 'Bomba', 'Objeto para explotar cualquier bola al a', 'http://dsa2.upc.edu/imagenes/bomba.jpg', 300),
+	(2, 'Delete', 'Elimina una simple bola o incluso una bola grande!', 'http://dsa2.upc.edu/imagenes/delete.jpg', 500),
+	(3, 'Oro', 'Multiplica x2 tu oro obtenida durante 30 minutos!', 'http://dsa2.upc.edu/imagenes/oro.jpg', 1000);
 
 -- Volcando estructura para tabla tocabolas.users
 CREATE TABLE IF NOT EXISTS `users` (

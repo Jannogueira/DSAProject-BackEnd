@@ -21,7 +21,6 @@ public class WebManagerImpl implements WebManager {
         items.add(new ShopItem("bomba", "Objeto para explotar cualquier bola a tu alrededor!", "http://dsa2.upc.edu/imagenes/bomba.jpg", 300));
         items.add(new ShopItem("delete", "Elimina una simple bola o incluso una bola grande!", "http://dsa2.upc.edu/imagenes/delete.jpg", 500));
         items.add(new ShopItem("oro", "Multiplica x2 tu oro obtenida durante 30 minutos!", "http://dsa2.upc.edu/imagenes/oro.jpg", 1000));
-
         shop = new Shop(items);
     }
 
