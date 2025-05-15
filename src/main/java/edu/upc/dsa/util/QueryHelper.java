@@ -49,6 +49,9 @@ public class QueryHelper {
         return sb.toString();
     }
 
+    public static String createSelectAll(Class theClass) {
+        return "SELECT * FROM " + theClass.getSimpleName();
+    }
 
     public static String createSelectFindAll(Class theClass, HashMap<String, String> params) {
 
@@ -83,5 +86,13 @@ public class QueryHelper {
 
         System.out.println("Generated UPDATE Query: " + sb);
         return sb.toString();
+    }
+
+    public static String createQueryDELETE(Object entity) {
+        return "DELETE FROM " + entity.getClass().getSimpleName() + " WHERE id = ?";
+    }
+
+    public static String createQuerySELECTbyField(Class theClass, String field) {
+        return "SELECT * FROM " + theClass.getSimpleName() + " WHERE " + field + " = ?";
     }
 }

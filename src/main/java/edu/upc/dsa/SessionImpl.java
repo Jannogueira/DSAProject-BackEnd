@@ -124,24 +124,12 @@ public class SessionImpl implements Session {
     }
 
     public void delete(Object object) {
-        try {
-            Class<?> theClass = object.getClass();
-            Object idValue = ObjectHelper.getter(object, "id");
-            if (idValue == null) {
-                System.err.println("Delete failed: id is null");
-                return;
-            }
-
-            String sql = "DELETE FROM " + theClass.getSimpleName() + " WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setObject(1, idValue);
-                int affected = stmt.executeUpdate();
-                if (affected > 0) {
-                    System.out.println("Eliminado satisfactoriamente.");
-                } else {
-                    System.out.println("Delete: ninguna fila afectada.");
-                }
-            }
+        String sql = QueryHelper.createQueryDELETE(object);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            Object id = ObjectHelper.getter(object, "id");
+            stmt.setObject(1, id);
+            int rowsAffected = stmt.executeUpdate();
+            System.out.println("Delete completado, fila afectada: " + rowsAffected);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -149,58 +137,66 @@ public class SessionImpl implements Session {
 
     public List<Object> findAll(Class theClass) {
         List<Object> result = new ArrayList<>();
-        String sql = "SELECT * FROM " + theClass.getSimpleName();
-
+        String sql = QueryHelper.createSelectAll(theClass);
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
-
             ResultSetMetaData meta = rs.getMetaData();
             int columnCount = meta.getColumnCount();
-
             while (rs.next()) {
                 Object entity = theClass.getDeclaredConstructor().newInstance();
-
                 for (int i = 1; i <= columnCount; i++) {
                     String column = meta.getColumnName(i);
                     Object value = rs.getObject(i);
                     ObjectHelper.setter(entity, column, value);
                 }
-
                 result.add(entity);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return result;
     }
 
+    @Override
     public List<Object> findAll(Class theClass, HashMap params) {
-     /*   String theQuery = QueryHelper.createSelectFindAll(theClass, params);
-        PreparedStatement pstm = null;
-        pstm = conn.prepareStatement(theQuery);
-
-        int i=1;
-        for (Object value : params.values()) {
-            pstm.setObject(i++, value );
+        List<Object> result = new ArrayList<>();
+        HashMap<String, String> stringParams = new HashMap<>();
+        for (Object key : params.keySet()) {
+            stringParams.put(key.toString(), params.get(key).toString());
         }
-        //ResultSet rs = pstm.executeQuery();
-
-
-
-
+        String sql = QueryHelper.createSelectFindAll(theClass, stringParams);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int index = 1;
+            for (Object value : params.values()) {
+                stmt.setObject(index++, value);
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                ResultSetMetaData meta = rs.getMetaData();
+                int columnCount = meta.getColumnCount();
+                while (rs.next()) {
+                    Object entity = theClass.getDeclaredConstructor().newInstance();
+                    for (int i = 1; i <= columnCount; i++) {
+                        String column = meta.getColumnName(i);
+                        Object columnValue = rs.getObject(i);
+                        ObjectHelper.setter(entity, column, columnValue);
+                    }
+                    result.add(entity);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return result;
-*/
-        return null;
     }
+
 
     public List<Object> query(String query, Class theClass, HashMap params) {
         return null;
     }
     @Override
     public <T> T getByField(Class<T> theClass, String fieldName, Object value) {
-        String sql = "SELECT * FROM " + theClass.getSimpleName() + " WHERE " + fieldName + " = ?";
+        String sql = QueryHelper.createQuerySELECTbyField(theClass, fieldName);
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setObject(1, value);
             try (ResultSet rs = stmt.executeQuery()) {
