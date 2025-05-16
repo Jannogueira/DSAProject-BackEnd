@@ -1,18 +1,18 @@
 package edu.upc.dsa.models;
 
-public class ShopItem {
+public class Items {
     String name;
     String description;
     String url_icon;
     int price;
 
-    public ShopItem(String name, String description, String url_icon, int price) {
+    public Items(String name, String description, String url_icon, int price) {
         this.name = name;
         this.description = description;
         this.url_icon = url_icon;
         this.price = price;
     }
-    public ShopItem(){}
+    public Items(){}
 
 
     public void setName(String name) {this.name = name;}

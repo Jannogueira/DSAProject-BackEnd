@@ -1,26 +1,25 @@
 package edu.upc.dsa.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class Shop {
 
-    List<ShopItem> items;
+    List<Items> items;
 
-    public Shop(List<ShopItem> Items) {
+    public Shop(List<Items> Items) {
         items = Items;
     }
 
-    public void addShopItem(ShopItem item){
+    public void addShopItem(Items item){
         items.add(item);
     }
 
-    public List<ShopItem> getAllShopItems(){
+    public List<Items> getAllShopItems(){
         return items;
     }
 
-    public void setItems(List<ShopItem> items) {
+    public void setItems(List<Items> items) {
         this.items = items;
     }
 

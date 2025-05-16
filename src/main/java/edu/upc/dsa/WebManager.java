@@ -1,7 +1,7 @@
 package edu.upc.dsa;
 
 import edu.upc.dsa.models.Users;
-import edu.upc.dsa.models.ShopItem;
+import edu.upc.dsa.models.Items;
 
 import java.util.List;
 
@@ -14,9 +14,9 @@ public interface WebManager {
 
     public Boolean loginUser(String correo, String password);
 
-    public List<ShopItem> getAllShopItems();
+    public List<Items> getAllShopItems();
 
-    public void addShopItem(ShopItem item);
+    public void addShopItem(Items item);
 
     public List<Users> getAllUsers();
     public Users getUser(String usuario);

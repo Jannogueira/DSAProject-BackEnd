@@ -1,14 +1,10 @@
 package edu.upc.dsa;
 
 import edu.upc.dsa.models.*;
-import edu.upc.dsa.util.DBUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class WebManagerImpl implements WebManager {
 
@@ -17,10 +13,10 @@ public class WebManagerImpl implements WebManager {
     private Shop shop;
     private WebManagerImpl() {
         users = new ArrayList<>();
-        List<ShopItem> items = new ArrayList<>();
-        items.add(new ShopItem("bomba", "Objeto para explotar cualquier bola a tu alrededor!", "http://dsa2.upc.edu/imagenes/bomba.jpg", 300));
-        items.add(new ShopItem("delete", "Elimina una simple bola o incluso una bola grande!", "http://dsa2.upc.edu/imagenes/delete.jpg", 500));
-        items.add(new ShopItem("oro", "Multiplica x2 tu oro obtenida durante 30 minutos!", "http://dsa2.upc.edu/imagenes/oro.jpg", 1000));
+        List<Items> items = new ArrayList<>();
+        items.add(new Items("bomba", "Objeto para explotar cualquier bola a tu alrededor!", "http://dsa2.upc.edu/imagenes/bomba.jpg", 300));
+        items.add(new Items("delete", "Elimina una simple bola o incluso una bola grande!", "http://dsa2.upc.edu/imagenes/delete.jpg", 500));
+        items.add(new Items("oro", "Multiplica x2 tu oro obtenida durante 30 minutos!", "http://dsa2.upc.edu/imagenes/oro.jpg", 1000));
         shop = new Shop(items);
     }
 
@@ -39,6 +35,7 @@ public class WebManagerImpl implements WebManager {
         Session session = GameSession.openSession();
         Users users = new Users(username, correo, password);
         session.save(users);
+        session.close();
         return 1;
     }
 
@@ -46,6 +43,7 @@ public class WebManagerImpl implements WebManager {
     public Boolean existeUser(String user) {
         Session session = GameSession.openSession();
         Users u = session.getByField(Users.class, "usuario", user);
+        session.close();
         return u != null;
     }
 
@@ -53,6 +51,7 @@ public class WebManagerImpl implements WebManager {
     public Boolean existeEmail(String email) {
         Session session = GameSession.openSession();
         Users u = session.getByField(Users.class, "correo", email);
+        session.close();
         return u != null;
     }
 
@@ -60,16 +59,17 @@ public class WebManagerImpl implements WebManager {
     public Boolean loginUser(String correo, String password) {
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "correo", correo);
+        session.close();
         return user != null && user.getPassword().equals(password);
     }
 
     @Override
-    public List<ShopItem> getAllShopItems() {
+    public List<Items> getAllShopItems() {
         return this.shop.getAllShopItems();
     }
 
     @Override
-    public void addShopItem(ShopItem item) {
+    public void addShopItem(Items item) {
         this.shop.addShopItem(item);
     }
 
@@ -81,33 +81,42 @@ public class WebManagerImpl implements WebManager {
         for (Object o : objs) {
             usersList.add((Users) o);
         }
+        session.close();
         return usersList;
     }
 
     @Override
     public Users getUser(String username) {
         Session session = GameSession.openSession();
-        return session.getByField(Users.class, "usuario", username);
+        Users user = session.getByField(Users.class, "usuario", username);
+        session.close();
+        return user;
     }
 
     @Override
     public boolean eliminarUsuario(String usuario) {
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", usuario);
-        if (user == null) return false;
+        if (user == null){
+            session.close();
+            return false;
+        }
         session.delete(user);
+        session.close();
         return true;
     }
 
     @Override
     public boolean actualizarUsuario(String usuario, String nuevoUsuario) {
         Session session = GameSession.openSession();
-        Users user = getUser(usuario);
+        Users user = session.getByField(Users.class, "usuario", usuario);
         if (user == null) {
+            session.close();
             return false;
         }
         user.setUsuario(nuevoUsuario);
         session.update(user);
+        session.close();
         return true;
     }
 
@@ -115,9 +124,13 @@ public class WebManagerImpl implements WebManager {
     public boolean actualizarCorreo(String usuario, String nuevoCorreo) {
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", usuario);
-        if (user == null) return false;
+        if (user == null){
+            session.close();
+            return false;
+        }
         user.setCorreo(nuevoCorreo);
         session.update(user);
+        session.close();
         return true;
     }
 
@@ -125,9 +138,13 @@ public class WebManagerImpl implements WebManager {
     public boolean actualizarContrasena(String usuario, String nuevaContrasena) {
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", usuario);
-        if (user == null) return false;
+        if (user == null){
+            session.close();
+            return false;
+        }
         user.setPassword(nuevaContrasena);
         session.update(user);
+        session.close();
         return true;
     }
 
@@ -135,6 +152,7 @@ public class WebManagerImpl implements WebManager {
     public String getCorreo(String usuario) {
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", usuario);
+        session.close();
         return (user != null) ? user.getCorreo() : null;
     }
 
@@ -142,6 +160,13 @@ public class WebManagerImpl implements WebManager {
     public String getUsername(String correo) {
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "correo", correo);
+        session.close();
         return (user != null) ? user.getUsuario() : null;
     }
+
+    /*@Override
+    public int comprarItems(String token, Map){
+        Session session = GameSession.openSession();
+
+    }*/
 }
