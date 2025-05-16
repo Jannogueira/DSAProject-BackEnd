@@ -14,9 +14,9 @@ public class WebManagerImpl implements WebManager {
     private WebManagerImpl() {
         users = new ArrayList<>();
         List<Items> items = new ArrayList<>();
-        items.add(new Items("bomba", "Objeto para explotar cualquier bola a tu alrededor!", "http://dsa2.upc.edu/imagenes/bomba.jpg", 300));
-        items.add(new Items("delete", "Elimina una simple bola o incluso una bola grande!", "http://dsa2.upc.edu/imagenes/delete.jpg", 500));
-        items.add(new Items("oro", "Multiplica x2 tu oro obtenida durante 30 minutos!", "http://dsa2.upc.edu/imagenes/oro.jpg", 1000));
+        items.add(new Items(1,"bomba", "Objeto para explotar cualquier bola a tu alrededor!", "./imagenes/bomba.jpg", 300));
+        items.add(new Items(2,"delete", "Elimina una simple bola o incluso una bola grande!", "./imagenes/delete.jpg", 500));
+        items.add(new Items(3, "oro", "Multiplica x2 tu oro obtenida durante 30 minutos!", "./imagenes/oro.jpg", 1000));
         shop = new Shop(items);
     }
 
@@ -186,7 +186,7 @@ public class WebManagerImpl implements WebManager {
                     session.close();
                     return -2; // Algún item no encontrado
                 }
-                costeTotal += item.getPrice() * cantidad;
+                costeTotal += item.getPrecio() * cantidad;
             }
             // Paso 3: Verificar si el usuario tiene suficiente dinero
             if (dineroUsuario < costeTotal) {
@@ -223,5 +223,16 @@ public class WebManagerImpl implements WebManager {
             session.close();
             return -99; // Error inesperado
         }
+    }
+
+    @Override
+    public List<Items> getAllItems() {
+        Session session = GameSession.openSession();
+        List<Object> itemsBBDD = session.findAll(Items.class);
+        List<Items> items = new ArrayList<>();
+        for (Object o : itemsBBDD) {
+            items.add((Items) o);
+        }
+        return items;
     }
 }

@@ -1,26 +1,29 @@
 package edu.upc.dsa.models;
 
 public class Items {
-    String name;
-    String description;
+    int id;
+    String nombre;
+    String descripcion;
     String url_icon;
-    int price;
+    int precio;
 
-    public Items(String name, String description, String url_icon, int price) {
-        this.name = name;
-        this.description = description;
+    public Items(int id, String nombre, String descripcion, String url_icon, int precio) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
         this.url_icon = url_icon;
-        this.price = price;
+        this.precio = precio;
     }
     public Items(){}
 
-
-    public void setName(String name) {this.name = name;}
-    public String getName() {return name;}
-    public void setDescription(String description) {this.description = description;}
-    public String getDescription() {return description;}
+    public int getId() {return id;}
+    public void setId(int id) {this.id = id;}
+    public void setNombre(String nombre) {this.nombre = nombre;}
+    public String getNombre() {return nombre;}
+    public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
+    public String getDescripcion() {return descripcion;}
     public void setUrl_icon(String url_icon) {this.url_icon = url_icon;}
     public String getUrl_icon() {return url_icon;}
-    public void setPrice(int price) {this.price = price;}
-    public int getPrice() {return price;}
+    public void setPrecio(int precio) {this.precio = precio;}
+    public int getPrecio() {return precio;}
 }

@@ -28,4 +28,5 @@ public interface WebManager {
     public String getCorreo(String usuario);
     public String getUsername(String correo);
     public int comprarItems(String usuario, Map<Integer, Integer> itemsACobrar);
+    public List<Items> getAllItems();
 }
