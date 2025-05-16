@@ -201,7 +201,7 @@ public class WebManagerImpl implements WebManager {
                 int itemId = entry.getKey();
                 int cantidad = entry.getValue();
                 // Buscar si ya tiene ese item en el inventario
-                HashMap<String, Object> condiciones = new HashMap<>();
+                java.util.HashMap<String, Object> condiciones = new java.util.HashMap<>();
                 condiciones.put("ID_user", user.getId());
                 condiciones.put("ID_item", itemId);
                 List<Object> resultado = session.findAll(Inventario.class, condiciones);
