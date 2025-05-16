@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: 'http://localhost:8080/TocaBolas/Shop/items',
+        url: '/TocaBolas/Shop/items',
         method: 'GET',
         success: function (productos) {
             const contenedor = $('#productos');
