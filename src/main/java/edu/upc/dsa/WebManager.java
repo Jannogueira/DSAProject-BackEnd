@@ -4,6 +4,7 @@ import edu.upc.dsa.models.Users;
 import edu.upc.dsa.models.Items;
 
 import java.util.List;
+import java.util.Map;
 
 public interface WebManager {
 
@@ -26,4 +27,5 @@ public interface WebManager {
     public boolean actualizarContrasena(String usuario, String nuevaContrasena);
     public String getCorreo(String usuario);
     public String getUsername(String correo);
+    public int comprarItems(String usuario, Map<Integer, Integer> itemsACobrar);
 }

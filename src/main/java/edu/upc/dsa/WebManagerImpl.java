@@ -164,9 +164,64 @@ public class WebManagerImpl implements WebManager {
         return (user != null) ? user.getUsuario() : null;
     }
 
-    /*@Override
-    public int comprarItems(String token, Map){
+    @Override
+    public int comprarItems(String usuario, Map<Integer, Integer> itemsACobrar){
         Session session = GameSession.openSession();
+        try {
+            // Paso 1: Obtener el usuario por su nombre
+            Users user = session.getByField(Users.class, "usuario", usuario);
+            if (user == null) {
+                session.close();
+                return -1; // Usuario no encontrado
+            }
+            int dineroUsuario = user.getMoney();
+            int costeTotal = 0;
+            // Paso 2: Calcular el coste total
+            for (Map.Entry<Integer, Integer> entry : itemsACobrar.entrySet()) {
+                int itemId = entry.getKey();
+                int cantidad = entry.getValue();
 
-    }*/
+                Items item = session.getByField(Items.class, "id", itemId); // id es el campo por el que buscas
+                if (item == null) {
+                    session.close();
+                    return -2; // Algún item no encontrado
+                }
+                costeTotal += item.getPrice() * cantidad;
+            }
+            // Paso 3: Verificar si el usuario tiene suficiente dinero
+            if (dineroUsuario < costeTotal) {
+                session.close();
+                return 0; // Dinero insuficiente
+            }
+            // Paso 4: Restar dinero y actualizar usuario
+            user.setMoney(dineroUsuario - costeTotal);
+            session.update(user);
+            // Paso 5: Procesar inventario
+            for (Map.Entry<Integer, Integer> entry : itemsACobrar.entrySet()) {
+                int itemId = entry.getKey();
+                int cantidad = entry.getValue();
+                // Buscar si ya tiene ese item en el inventario
+                HashMap<String, Object> condiciones = new HashMap<>();
+                condiciones.put("ID_user", user.getId());
+                condiciones.put("ID_item", itemId);
+                List<Object> resultado = session.findAll(Inventario.class, condiciones);
+                if (resultado.isEmpty()) {
+                    // No existe en inventario: insertamos uno nuevo
+                    Inventario nuevo = new Inventario(user.getId(), itemId, cantidad);
+                    session.save(nuevo);
+                } else {
+                    // Ya existe: actualizamos cantidad
+                    Inventario existente = (Inventario) resultado.get(0);
+                    existente.setCantidad(existente.getCantidad() + cantidad);
+                    session.update(existente);
+                }
+            }
+            session.close();
+            return 1; // Compra exitosa
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.close();
+            return -99; // Error inesperado
+        }
+    }
 }
