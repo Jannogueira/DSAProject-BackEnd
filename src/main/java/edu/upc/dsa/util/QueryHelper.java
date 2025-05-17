@@ -87,6 +87,36 @@ public class QueryHelper {
         System.out.println("Generated UPDATE Query: " + sb);
         return sb.toString();
     }
+    public static String createQueryUpdateCompositeKey(Object entity, String[] keyFields) {
+        StringBuilder sb = new StringBuilder("UPDATE ");
+        sb.append(entity.getClass().getSimpleName());
+        sb.append(" SET ");
+        String[] fields = ObjectHelper.getFields(entity);
+        boolean first = true;
+        for (String field : fields) {
+            boolean isKey = false;
+            for (String key : keyFields) {
+                if (key.equalsIgnoreCase(field)) {
+                    isKey = true;
+                    break;
+                }
+            }
+            if (!isKey) {
+                if (!first) sb.append(", ");
+                sb.append(field).append(" = ?");
+                first = false;
+            }
+        }
+        sb.append(" WHERE ");
+        first = true;
+        for (String key : keyFields) {
+            if (!first) sb.append(" AND ");
+            sb.append(key).append(" = ?");
+            first = false;
+        }
+        System.out.println("Generated Composite Key UPDATE Query: " + sb.toString());
+        return sb.toString();
+    }
 
     public static String createQueryDELETE(Object entity) {
         return "DELETE FROM " + entity.getClass().getSimpleName() + " WHERE id = ?";

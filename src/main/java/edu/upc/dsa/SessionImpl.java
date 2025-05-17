@@ -224,4 +224,36 @@ public class SessionImpl implements Session {
         }
         return null;
     }
+    public void updateWithCompositeKey(Object entity, String[] keyFields) {
+        String query = QueryHelper.createQueryUpdateCompositeKey(entity, keyFields);
+        try (PreparedStatement pstm = conn.prepareStatement(query)) {
+            String[] fields = ObjectHelper.getFields(entity);
+            int i = 1;
+            for (String field : fields) {
+                boolean isKey = false;
+                for (String key : keyFields) {
+                    if (key.equalsIgnoreCase(field)) {
+                        isKey = true;
+                        break;
+                    }
+                }
+                if (!isKey) {
+                    Object value = ObjectHelper.getter(entity, field);
+                    if (value == null) {
+                        value = "";
+                    }
+                    pstm.setObject(i++, value);
+                }
+            }
+            for (String key : keyFields) {
+                Object keyValue = ObjectHelper.getter(entity, key);
+                pstm.setObject(i++, keyValue);
+            }
+            pstm.executeUpdate();
+            System.out.println("Composite key update successful.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

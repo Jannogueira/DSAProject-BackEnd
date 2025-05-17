@@ -16,4 +16,5 @@ public interface Session {
     List<Object> query(String query, Class theClass, HashMap params);
 
     <T> T getByField(Class<T> theClass, String fieldName, Object value);
+    public void updateWithCompositeKey(Object entity, String[] keyFields);
 }
