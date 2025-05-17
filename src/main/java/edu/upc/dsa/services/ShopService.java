@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.Map;
 
 @Api(value = "/Shop", description = "Endpoint to Shop Service")
 @Path("/Shop")
@@ -31,7 +32,7 @@ public class ShopService {
         return wm.getAllItems();
         //return wm.getAllShopItems();
     }
-    @POST
+    /*@POST
     @Path("/comprar")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -80,7 +81,48 @@ public class ShopService {
                         .entity("{\"status\":false, \"message\":\"Error inesperado\"}")
                         .build();
         }
+    }*/
+    /*@POST
+    @Path("/comprar")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Compra múltiples items", notes = "Envía un mapa de ID de ítem y cantidades.")
+    public Response comprarItems(java.util.Map<Integer, Integer> itemsACobrar) {
+        // Para este ejemplo, asumimos que el usuario es fijo o extraído de otro modo
+        String usuario = "Jan"; // Puedes reemplazar esto con otra lógica si lo deseas
+
+        int resultado = wm.comprarItems(usuario, itemsACobrar);
+
+        switch (resultado) {
+            case -1:
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                        .build();
+            case -2:
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"status\":false, \"message\":\"Algún item no existe\"}")
+                        .build();
+            case 0:
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"status\":false, \"message\":\"Dinero insuficiente\"}")
+                        .build();
+            case 1:
+                return Response.ok("{\"status\":true, \"message\":\"Compra exitosa\"}")
+                        .build();
+            default:
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity("{\"status\":false, \"message\":\"Error inesperado\"}")
+                        .build();
+        }
+    }*/
+    @POST
+    @Path("/comprar")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response comprar(Map<String, Integer> items) {
+        return Response.ok("{\"status\":true, \"message\":\"Recibido " + items.size() + " items\"}").build();
     }
+
 
 
 }

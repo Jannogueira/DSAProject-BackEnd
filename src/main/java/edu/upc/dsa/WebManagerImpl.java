@@ -3,6 +3,7 @@ package edu.upc.dsa;
 import edu.upc.dsa.models.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -204,7 +205,7 @@ public class WebManagerImpl implements WebManager {
                 java.util.HashMap<String, Object> condiciones = new java.util.HashMap<>();
                 condiciones.put("ID_user", user.getId());
                 condiciones.put("ID_item", itemId);
-                List<Object> resultado = session.findAll(Inventario.class, condiciones);
+                List<Inventario> resultado = (List<Inventario>) (List<?>) session.findAll(Inventario.class, condiciones);
                 if (resultado.isEmpty()) {
                     // No existe en inventario: insertamos uno nuevo
                     Inventario nuevo = new Inventario(user.getId(), itemId, cantidad);
@@ -233,6 +234,11 @@ public class WebManagerImpl implements WebManager {
         for (Object o : itemsBBDD) {
             items.add((Items) o);
         }
+        Map<Integer, Integer> itemsACobrar = new HashMap<>();
+        itemsACobrar.put(1, 2);  // ID del ítem 1, cantidad 2
+        itemsACobrar.put(2, 5);  // ID del ítem 2, cantidad 5
+        itemsACobrar.put(3, 1);  // ID del ítem 3, cantidad 1
+        comprarItems("Jan", itemsACobrar);
         return items;
     }
 }
