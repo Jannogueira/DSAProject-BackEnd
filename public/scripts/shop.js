@@ -9,7 +9,7 @@ $(document).ready(function () {
             productos.forEach(({id, nombre, descripcion, precio, url_icon}) => {
                 const card = `
                     <div class="col-md-4 mb-4">
-                        <div class="card shadow rounded-4" style="min-height: 400px">
+                        <div class="card shadow rounded-4 marco-negro2" style="min-height: 400px">
                             <img src="${url_icon}" class="card-img-top borderedondo" alt="${nombre}">
                             <div class="card-body">
                                 <h5 class="card-title">${nombre}</h5>
@@ -24,10 +24,10 @@ $(document).ready(function () {
             });
             const card = `
                     <div class="col-md-4 mb-4">
-                        <div class="card shadow rounded-4" style="min-height: 400px">
-                        <img src="./imagenes/testing.jpg" class="card-img-top borderedondo">
+                        <div class="card shadow rounded-4 marco-negro2" style="min-height: 400px">
+                        <img src="./imagenes/carrito.png" class="card-img-top borderedondo">
                             <div class="card-body">
-                                <h5 class="card-title">TEST COMPRA</h5>
+                                <h5 class="card-title">COMPRA POR ID's</h5>
                                 <p class="card-text">Escribe la lista de objetos que quieres comprar!</p>
                                 <input type="text" class="form-control" id="tstTxt" placeholder="1:2, 2:5">   
                             </div>

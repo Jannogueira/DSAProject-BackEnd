@@ -553,6 +553,9 @@
 .marco-negro {
   border: 6px solid #000;
 }
+.marco-negro2 {
+  border: 4px solid #000;
+}
 
 .contornotexto {
   color: white;
