@@ -242,11 +242,6 @@ public class WebManagerImpl implements WebManager {
         for (Object o : itemsBBDD) {
             items.add((Items) o);
         }
-        Map<Integer, Integer> itemsACobrar = new HashMap<>();
-        itemsACobrar.put(1, 2);  // ID del ítem 1, cantidad 2
-        itemsACobrar.put(2, 5);  // ID del ítem 2, cantidad 5
-        itemsACobrar.put(3, 1);  // ID del ítem 3, cantidad 1
-        comprarItems("Jan", itemsACobrar);
         return items;
     }
 }

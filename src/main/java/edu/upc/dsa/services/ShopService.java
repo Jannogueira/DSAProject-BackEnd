@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,14 +33,13 @@ public class ShopService {
         return wm.getAllItems();
         //return wm.getAllShopItems();
     }
-    /*@POST
+    @POST
     @Path("/comprar")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Compra múltiples items", notes = "Envía un mapa de ID de ítem y cantidades, junto con el token en el header.")
     public Response comprarItems(
-            @HeaderParam("Authorization") String tokenHeader,
-            java.util.Map<Integer, Integer> itemsACobrar) {
+            @HeaderParam("Authorization") String tokenHeader, String itemsString) {
 
         // Validación del token
         if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
@@ -57,7 +57,7 @@ public class ShopService {
         }
 
         String usuario = JwtUtil.getUsernameFromToken(token);
-
+        Map<Integer, Integer> itemsACobrar = parseItemsString(itemsString);
         int resultado = wm.comprarItems(usuario, itemsACobrar);
 
         switch (resultado) {
@@ -81,48 +81,28 @@ public class ShopService {
                         .entity("{\"status\":false, \"message\":\"Error inesperado\"}")
                         .build();
         }
-    }*/
-    /*@POST
-    @Path("/comprar")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Compra múltiples items", notes = "Envía un mapa de ID de ítem y cantidades.")
-    public Response comprarItems(java.util.Map<Integer, Integer> itemsACobrar) {
-        // Para este ejemplo, asumimos que el usuario es fijo o extraído de otro modo
-        String usuario = "Jan"; // Puedes reemplazar esto con otra lógica si lo deseas
-
-        int resultado = wm.comprarItems(usuario, itemsACobrar);
-
-        switch (resultado) {
-            case -1:
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
-                        .build();
-            case -2:
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("{\"status\":false, \"message\":\"Algún item no existe\"}")
-                        .build();
-            case 0:
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("{\"status\":false, \"message\":\"Dinero insuficiente\"}")
-                        .build();
-            case 1:
-                return Response.ok("{\"status\":true, \"message\":\"Compra exitosa\"}")
-                        .build();
-            default:
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity("{\"status\":false, \"message\":\"Error inesperado\"}")
-                        .build();
-        }
-    }*/
-    @POST
-    @Path("/comprar")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response comprar(Map<String, Integer> items) {
-        return Response.ok("{\"status\":true, \"message\":\"Recibido " + items.size() + " items\"}").build();
     }
 
+    private Map<Integer, Integer> parseItemsString(String itemsString) {
+        Map<Integer, Integer> map = new HashMap<>();
+        if (itemsString == null || itemsString.trim().isEmpty()) return map;
 
+        // Quita espacios y separa por coma
+        String[] pairs = itemsString.replaceAll("\\s+", "").split(",");
+        for (String pair : pairs) {
+            if (pair.isEmpty()) continue;
+            String[] kv = pair.split(":");
+            if (kv.length == 2) {
+                try {
+                    int key = Integer.parseInt(kv[0]);
+                    int value = Integer.parseInt(kv[1]);
+                    map.put(key, value);
+                } catch (NumberFormatException e) {
+                    // Puedes manejar el error aquí si lo deseas
+                }
+            }
+        }
+        return map;
+    }
 
 }
