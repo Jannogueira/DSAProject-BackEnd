@@ -248,14 +248,14 @@ public class WebManagerImpl implements WebManager {
     @Override
     public Integer getScore(String username) {
         Session session = GameSession.openSession();
-        Users user = session.getByField(Users.class, "username", username);
+        Users user = session.getByField(Users.class, "usuario", username);
         session.close();
         return user != null ? user.getScore() : null;
     }
     @Override
     public Integer getMoney(String username) {
         Session session = GameSession.openSession();
-        Users user = session.getByField(Users.class, "username", username);
+        Users user = session.getByField(Users.class, "usuario", username);
         session.close();
         return user != null ? user.getMoney() : null;
     }

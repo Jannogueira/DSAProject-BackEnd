@@ -405,6 +405,28 @@ public class UserService {
         String jsonResponse = String.format("{\"status\":true, \"username\":\"%s\", \"score\":%d, \"money\":%d}", username, score, money);
         return Response.ok(jsonResponse).build();
     }
+    @GET
+    @Path("/datosUsuario")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDatosUsuario(@QueryParam("username") String username) {
+        if (username == null || username.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"status\":false, \"message\":\"Debe proporcionar un nombre de usuario\"}")
+                    .build();
+        }
+
+        Integer score = wm.getScore(username);
+        Integer money = wm.getMoney(username);
+
+        if (score == null || money == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                    .build();
+        }
+
+        String jsonResponse = String.format("{\"status\":true, \"username\":\"%s\", \"score\":%d, \"money\":%d}", username, score, money);
+        return Response.ok(jsonResponse).build();
+    }
 
 
 }
