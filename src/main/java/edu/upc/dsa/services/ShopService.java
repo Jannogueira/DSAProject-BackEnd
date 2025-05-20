@@ -40,7 +40,7 @@ public class ShopService {
     @ApiOperation(value = "Compra múltiples items", notes = "Envía un mapa de ID de ítem y cantidades, junto con el token en el header.")
     public Response comprarItems(
             @HeaderParam("Authorization") String tokenHeader, String itemsString) {
-
+        itemsString = quitarComillas(itemsString);
         // Validación del token
         if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
             return Response.status(Response.Status.UNAUTHORIZED)
@@ -103,6 +103,13 @@ public class ShopService {
             }
         }
         return map;
+    }
+    public static String quitarComillas(String texto) {
+        if (texto != null && texto.length() >= 2 &&
+                texto.startsWith("\"") && texto.endsWith("\"")) {
+            return texto.substring(1, texto.length() - 1);
+        }
+        return texto;
     }
 
 }
