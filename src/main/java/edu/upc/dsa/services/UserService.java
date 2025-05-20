@@ -375,7 +375,36 @@ public class UserService {
         return Response.ok("{\"status\":true, \"email\":\"" + users.getCorreo() + "\"}")
                 .build();
     }
+    @GET
+    @Path("/userStats")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getScoreAndMoney(@HeaderParam("Authorization") String tokenHeader) {
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token no proporcionado o inválido\"}")
+                    .build();
+        }
+        String token = tokenHeader.substring("Bearer ".length());
+        if (!JwtUtil.validateToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token inválido o expirado\"}")
+                    .build();
+        }
 
+        String username = JwtUtil.getUsernameFromToken(token);
+
+        Integer score = wm.getScore(username);
+        Integer money = wm.getMoney(username);
+
+        if (score == null || money == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                    .build();
+        }
+
+        String jsonResponse = String.format("{\"status\":true, \"username\":\"%s\", \"score\":%d, \"money\":%d}", username, score, money);
+        return Response.ok(jsonResponse).build();
+    }
 
 
 }

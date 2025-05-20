@@ -238,10 +238,25 @@ public class WebManagerImpl implements WebManager {
     public List<Items> getAllItems() {
         Session session = GameSession.openSession();
         List<Object> itemsBBDD = session.findAll(Items.class);
+        session.close();
         List<Items> items = new ArrayList<>();
         for (Object o : itemsBBDD) {
             items.add((Items) o);
         }
         return items;
+    }
+    @Override
+    public Integer getScore(String username) {
+        Session session = GameSession.openSession();
+        Users user = session.getByField(Users.class, "username", username);
+        session.close();
+        return user != null ? user.getScore() : null;
+    }
+    @Override
+    public Integer getMoney(String username) {
+        Session session = GameSession.openSession();
+        Users user = session.getByField(Users.class, "username", username);
+        session.close();
+        return user != null ? user.getMoney() : null;
     }
 }
