@@ -260,46 +260,49 @@ public class WebManagerImpl implements WebManager {
         return user != null ? user.getMoney() : null;
     }
 
+
     @Override
-    public List<ItemInventarioDTO> getInventarioPorUsuario(String username) {
-        List<ItemInventarioDTO> inventarioDetallado = new ArrayList<>();
+    public String getInventarioPorUsuario(String username) {
         Session session = GameSession.openSession();
+        StringBuilder json = new StringBuilder("[");
+        boolean firstItem = true;
 
         try {
-            // Obtener usuario
             Users user = this.getUser(username);
-            if (user == null) return inventarioDetallado;
+            if (user == null) return "[]";
 
-            // Obtener su inventario
             HashMap<String, Object> params = new HashMap<>();
             params.put("ID_user", user.getId());
 
             List<Object> resultados = session.findAll(Inventario.class, params);
-            for (Object o : resultados) {
-                if (!(o instanceof Inventario)) continue;
-                Inventario inv = (Inventario) o;
-
-                // Obtener el ítem correspondiente
+            for (Object obj : resultados) {
+                Inventario inv = (Inventario) obj;
                 Items item = session.getByField(Items.class, "id", inv.getID_item());
+
                 if (item != null) {
-                    ItemInventarioDTO dto = new ItemInventarioDTO(
+                    if (!firstItem) {
+                        json.append(",");
+                    }
+                    json.append(String.format(
+                            "{\"id\":%d, \"nombre\":\"%s\", \"descripcion\":\"%s\", \"url_icon\":\"%s\", \"cantidad\":%d}",
                             item.getId(),
-                            item.getNombre(),
-                            item.getDescripcion(),
-                            item.getUrl_icon(),
+                            item.getNombre().replace("\"", "\\\""),
+                            item.getDescripcion().replace("\"", "\\\""),
+                            item.getUrl_icon().replace("\"", "\\\""),
                             inv.getCantidad()
-                    );
-                    inventarioDetallado.add(dto);
+                    ));
+                    firstItem = false;
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
+            return "[]";
         } finally {
             session.close();
         }
 
-        return inventarioDetallado;
+        json.append("]");
+        return json.toString();
     }
 
 }

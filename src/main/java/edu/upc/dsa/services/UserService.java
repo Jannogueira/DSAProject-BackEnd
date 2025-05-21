@@ -331,11 +331,11 @@ public class UserService {
     }
 
     @GET
-    @Path("/inventario/{username}")
+    @Path("/inventario")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getInventario(@PathParam("username") String username) {
-        List<ItemInventarioDTO> inventario = wm.getInventarioPorUsuario(username);
-        return Response.ok(inventario).build();
+    public Response getInventarioUsuario(@HeaderParam("Authorization") String username) {
+        String jsonInventario = wm.getInventarioPorUsuario(username);
+        return Response.ok(jsonInventario).build();
     }
 
 
