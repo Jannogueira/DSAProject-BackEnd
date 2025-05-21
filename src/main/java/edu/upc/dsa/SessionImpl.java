@@ -168,33 +168,65 @@ public class SessionImpl implements Session {
     public List<Object> findAll(Class theClass, HashMap params) {
         List<Object> result = new ArrayList<>();
         HashMap<String, String> stringParams = new HashMap<>();
+
+        System.out.println("==> findAll DEBUG - Clase objetivo: " + theClass.getSimpleName());
+
         for (Object key : params.keySet()) {
             stringParams.put(key.toString(), params.get(key).toString());
+            System.out.println("==> Param: " + key + " = " + params.get(key));
         }
+
         String sql = QueryHelper.createSelectFindAll(theClass, stringParams);
+        System.out.println("==> SQL generado: " + sql);
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int index = 1;
             for (Object value : params.values()) {
-                stmt.setObject(index++, value);
+                stmt.setObject(index, value);
+                System.out.println("==> Set param[" + index + "]: " + value);
+                index++;
             }
+
             try (ResultSet rs = stmt.executeQuery()) {
                 ResultSetMetaData meta = rs.getMetaData();
                 int columnCount = meta.getColumnCount();
+
                 while (rs.next()) {
                     Object entity = theClass.getDeclaredConstructor().newInstance();
+                    System.out.println("==> Instanciado objeto de tipo: " + entity.getClass().getSimpleName());
+
                     for (int i = 1; i <= columnCount; i++) {
                         String column = meta.getColumnName(i);
                         Object columnValue = rs.getObject(i);
-                        ObjectHelper.setter(entity, column, columnValue);
+
+                        System.out.println("    -> columna: " + column + ", valor: " + columnValue);
+
+                        try {
+                            ObjectHelper.setter(entity, column, columnValue);
+                        } catch (Exception e) {
+                            System.out.println("    [ERROR] Al hacer setter para " + column + ": " + e.getMessage());
+                            e.printStackTrace();
+                        }
                     }
+
                     result.add(entity);
+                    System.out.println("==> Objeto añadido a la lista.");
                 }
+
+            } catch (Exception e) {
+                System.out.println("==> [ERROR] durante la ejecución del ResultSet: " + e.getMessage());
+                e.printStackTrace();
             }
+
         } catch (Exception e) {
+            System.out.println("==> [ERROR] preparando el statement o ejecutando SQL: " + e.getMessage());
             e.printStackTrace();
         }
+
+        System.out.println("==> Total resultados encontrados: " + result.size());
         return result;
     }
+
 
 
     public List<Object> query(String query, Class theClass, HashMap params) {

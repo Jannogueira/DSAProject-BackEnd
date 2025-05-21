@@ -10,7 +10,7 @@ public class Inventario {
         this.ID_item = ID_item;
         this.Cantidad = Cantidad;
     }
-
+    
     public Inventario() {}
 
     public int getID_user() {return ID_user;}

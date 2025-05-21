@@ -259,4 +259,54 @@ public class WebManagerImpl implements WebManager {
         session.close();
         return user != null ? user.getMoney() : null;
     }
+
+    @Override
+    public List<Map<String, Object>> getInventarioPorUsuario(String username) {
+        List<Map<String, Object>> inventarioDetallado = new ArrayList<>();
+        Session session = GameSession.openSession();
+
+        try {
+            // Obtener usuario por username
+            Users user = this.getUser(username);
+
+            if (user == null) {
+                return inventarioDetallado; // Usuario no existe
+            }
+
+            // Buscar inventario del usuario por ID
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("ID_user", user.getId());
+
+            List<Object> resultados = session.findAll(Inventario.class, params);
+            List<Inventario> itemsInventario = new ArrayList<>();
+            for (Object o : resultados) {
+                if (o instanceof Inventario) {
+                    itemsInventario.add((Inventario) o);
+                }
+            }
+
+            // Obtener detalles de cada ítem
+            for (Inventario inv : itemsInventario) {
+                Items item = session.getByField(Items.class, "id", inv.getID_item());
+
+                if (item != null) {
+                    Map<String, Object> detalleItem = new HashMap<>();
+                    detalleItem.put("id", item.getId());
+                    detalleItem.put("nombre", item.getNombre());
+                    detalleItem.put("descripcion", item.getDescripcion());
+                    detalleItem.put("url_icon", item.getUrl_icon());
+                    detalleItem.put("cantidad", inv.getCantidad());
+
+                    inventarioDetallado.add(detalleItem);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return inventarioDetallado;
+    }
 }

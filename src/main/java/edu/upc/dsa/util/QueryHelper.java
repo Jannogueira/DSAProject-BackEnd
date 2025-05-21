@@ -50,13 +50,13 @@ public class QueryHelper {
     }
 
     public static String createSelectAll(Class theClass) {
+
         return "SELECT * FROM " + theClass.getSimpleName();
     }
 
     public static String createSelectFindAll(Class theClass, HashMap<String, String> params) {
 
         Set<Map.Entry<String, String>> set = params.entrySet();
-
         StringBuffer sb = new StringBuffer("SELECT * FROM "+theClass.getSimpleName()+" WHERE 1=1");
         for (String key: params.keySet()) {
             sb.append(" AND "+key+"=?");
