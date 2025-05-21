@@ -1,5 +1,6 @@
 package edu.upc.dsa;
 
+import edu.upc.dsa.models.ItemInventarioDTO;
 import edu.upc.dsa.models.Users;
 import edu.upc.dsa.models.Items;
 
@@ -31,5 +32,5 @@ public interface WebManager {
     public List<Items> getAllItems();
     public Integer getMoney(String username);
     public Integer getScore(String username);
-    public List<Map<String, Object>> getInventarioPorUsuario(String username);
+    public List<ItemInventarioDTO> getInventarioPorUsuario(String username);
 }

@@ -1,6 +1,7 @@
 package edu.upc.dsa.services;
 
 import edu.upc.dsa.WebManagerImpl;
+import edu.upc.dsa.models.ItemInventarioDTO;
 import edu.upc.dsa.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -328,59 +329,12 @@ public class UserService {
         String jsonResponse = String.format("{\"status\":true, \"username\":\"%s\", \"score\":%d, \"money\":%d}", username, score, money);
         return Response.ok(jsonResponse).build();
     }
+
     @GET
-    @Path("/inventario")
-    @ApiOperation(value = "Obtener inventario del usuario", notes = "Devuelve los ítems del inventario del usuario autenticado")
+    @Path("/inventario/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getInventarioUsuario(@HeaderParam("Authorization") String tokenHeader) {
-        // Validación del token en el endpoint
-        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
-            return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"status\":false, \"message\":\"Token no válido\"}")
-                    .build();
-        }
-
-        String token = tokenHeader.substring("Bearer ".length());
-
-        if (!JwtUtil.validateToken(token)) {
-            return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"status\":false, \"message\":\"Token inválido o expirado\"}")
-                    .build();
-        }
-
-        // Extraer username del token
-        String username = JwtUtil.getUsernameFromToken(token);
-
-        // Llamar al WebManager con el username ya validado
-        List<Map<String, Object>> inventario = wm.getInventarioPorUsuario(username);
-
-        if (inventario.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"status\":false, \"message\":\"Inventario vacío\"}")
-                    .build();
-        }
-
-        return Response.ok(inventario).build();
-    }
-    @GET
-    @Path("/test/inventario")
-    @ApiOperation(value = "[TEST] Obtener inventario por username", notes = "Endpoint para testing sin token")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getInventarioTest(@QueryParam("username") String username) {
-        if (username == null || username.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"status\":false, \"message\":\"Parámetro 'username' requerido\"}")
-                    .build();
-        }
-
-        List<Map<String, Object>> inventario = wm.getInventarioPorUsuario(username);
-
-        if (inventario.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"status\":false, \"message\":\"Usuario no tiene inventario\"}")
-                    .build();
-        }
-
+    public Response getInventario(@PathParam("username") String username) {
+        List<ItemInventarioDTO> inventario = wm.getInventarioPorUsuario(username);
         return Response.ok(inventario).build();
     }
 
