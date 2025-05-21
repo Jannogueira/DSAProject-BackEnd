@@ -5,6 +5,7 @@ import io.swagger.jersey.listing.ApiListingResourceJSON;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 
@@ -31,6 +32,7 @@ public class  Main {
         rc.register(io.swagger.jaxrs.listing.ApiListingResource.class);
         rc.register(io.swagger.jaxrs.listing.SwaggerSerializers.class);
         rc.register(org.glassfish.jersey.moxy.json.MoxyJsonFeature.class);
+        rc.register(JacksonFeature.class);
 
         BeanConfig beanConfig = new BeanConfig();
 
