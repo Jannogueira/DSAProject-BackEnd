@@ -341,7 +341,6 @@ public class UserService {
     @GET
     @Path("/ranking")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Nombres de usuario y su record")
     public List<Map<String, Object>> getAllUsernamesAndScores() {
         return wm.getAllUsernamesAndScores();
     }
