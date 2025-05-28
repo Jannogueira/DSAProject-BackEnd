@@ -3,6 +3,7 @@ package edu.upc.dsa;
 import edu.upc.dsa.models.ItemInventarioDTO;
 import edu.upc.dsa.models.Users;
 import edu.upc.dsa.models.Items;
+import edu.upc.dsa.models.UsersScoreDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -33,5 +34,5 @@ public interface WebManager {
     public Integer getMoney(String username);
     public Integer getScore(String username);
     public String getInventarioPorUsuario(String username);
-    public List<Map<String, Object>> getAllUsernamesAndScores();
+    public List<UsersScoreDTO> getAllUsersScoresDTO();
 }

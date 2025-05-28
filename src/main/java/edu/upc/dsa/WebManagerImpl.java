@@ -306,17 +306,16 @@ public class WebManagerImpl implements WebManager {
     }
 
     @Override
-    public List<Map<String, Object>> getAllUsernamesAndScores() {
+    public List<UsersScoreDTO> getAllUsersScoresDTO() {
         Session session = GameSession.openSession();
         List<Object> objs = session.findAll(Users.class);
-        List<Map<String, Object>> result = new ArrayList<>();
+        List<UsersScoreDTO> result = new ArrayList<>();
 
         for (Object o : objs) {
             Users user = (Users) o;
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put("usuario", user.getUsuario());
-            userMap.put("score", user.getScore());
-            result.add(userMap);
+
+            UsersScoreDTO dto = new UsersScoreDTO(user.getUsuario(), user.getScore());
+            result.add(dto);
         }
 
         session.close();

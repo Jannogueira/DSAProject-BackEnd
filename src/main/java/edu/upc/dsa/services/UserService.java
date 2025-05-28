@@ -2,6 +2,7 @@ package edu.upc.dsa.services;
 
 import edu.upc.dsa.WebManagerImpl;
 import edu.upc.dsa.models.ItemInventarioDTO;
+import edu.upc.dsa.models.UsersScoreDTO;
 import edu.upc.dsa.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -341,8 +342,8 @@ public class UserService {
     @GET
     @Path("/ranking")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<String, Object>> getAllUsernamesAndScores() {
-        return wm.getAllUsernamesAndScores();
+    public List<UsersScoreDTO> getAllUsernamesAndScores() {
+        return wm.getAllUsersScoresDTO();
     }
 
 }
