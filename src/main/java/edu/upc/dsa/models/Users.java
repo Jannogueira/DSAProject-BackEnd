@@ -1,9 +1,13 @@
 package edu.upc.dsa.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Users {
     private int id;
     private String usuario;
     private String correo;
+
+    @JsonIgnore
     private String password;
     private int score;
     private int money;
