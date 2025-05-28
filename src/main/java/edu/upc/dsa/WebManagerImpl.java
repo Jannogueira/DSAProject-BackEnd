@@ -305,4 +305,22 @@ public class WebManagerImpl implements WebManager {
         return json.toString();
     }
 
+    @Override
+    public List<Map<String, Object>> getAllUsernamesAndScores() {
+        Session session = GameSession.openSession();
+        List<Object> objs = session.findAll(Users.class);
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Object o : objs) {
+            Users user = (Users) o;
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("usuario", user.getUsuario());
+            userMap.put("score", user.getScore());
+            result.add(userMap);
+        }
+
+        session.close();
+        return result;
+    }
+
 }

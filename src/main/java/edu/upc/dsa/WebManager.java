@@ -33,4 +33,5 @@ public interface WebManager {
     public Integer getMoney(String username);
     public Integer getScore(String username);
     public String getInventarioPorUsuario(String username);
+    public List<Map<String, Object>> getAllUsernamesAndScores();
 }

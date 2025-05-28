@@ -338,5 +338,12 @@ public class UserService {
         return Response.ok(jsonInventario).build();
     }
 
+    @Path("/ranking")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Get all usernames and scores")
+    public List<Map<String, Object>> getAllUsernamesAndScores() {
+        return wm.getAllUsernamesAndScores();
+    }
 
 }
