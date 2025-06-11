@@ -2,6 +2,7 @@ package edu.upc.dsa;
 
 import edu.upc.dsa.models.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -347,5 +348,14 @@ public class WebManagerImpl implements WebManager {
         session.save(insignia);
         session.close();
         return 1;
+    }
+    @Override
+    public void crearPregunta(String username, String titulo, String mensaje) {
+        Session session = GameSession.openSession();
+        LocalDate ahora = LocalDate.now();
+        java.sql.Date fecha = java.sql.Date.valueOf(ahora);
+        Question pregunta = new Question(fecha, titulo, mensaje, username);
+        session.save(pregunta);
+        session.close();
     }
 }

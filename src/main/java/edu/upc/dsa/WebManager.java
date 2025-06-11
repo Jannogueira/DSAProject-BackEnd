@@ -34,4 +34,5 @@ public interface WebManager {
     public List<UsersScoreDTO> getAllUsersScoresDTO();
     public List<InsigniaDTO> getUserInsignia(String username);
     public int anadirInsignia(String username, int id);
+    public void crearPregunta(String username, String titulo, String mensaje);
 }
