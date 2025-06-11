@@ -288,4 +288,20 @@ public class SessionImpl implements Session {
         }
     }
 
+    @Override
+    public <T> List<T> getListByField(Class<T> theClass, String fieldName, Object value) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(fieldName, value);
+
+        List<Object> results = findAll(theClass, params);
+        List<T> typedResults = new ArrayList<>();
+
+        for (Object obj : results) {
+            if (theClass.isInstance(obj)) {
+                typedResults.add(theClass.cast(obj));
+            }
+        }
+        return typedResults;
+    }
+
 }

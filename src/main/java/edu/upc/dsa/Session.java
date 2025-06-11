@@ -17,4 +17,5 @@ public interface Session {
 
     <T> T getByField(Class<T> theClass, String fieldName, Object value);
     public void updateWithCompositeKey(Object entity, String[] keyFields);
+    public <T> List<T> getListByField(Class<T> theClass, String fieldName, Object value);
 }
