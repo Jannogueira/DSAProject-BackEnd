@@ -1,6 +1,7 @@
 package edu.upc.dsa.services;
 
 import edu.upc.dsa.WebManagerImpl;
+import edu.upc.dsa.models.InsigniaDTO;
 import edu.upc.dsa.models.ItemInventarioDTO;
 import edu.upc.dsa.models.UsersScoreDTO;
 import edu.upc.dsa.util.JwtUtil;
