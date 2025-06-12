@@ -46,7 +46,7 @@ public class QuestionService {
                 .build();
     }
     @GET
-    @Path("")
+    @Path("/faqs")
     @ApiOperation(value = "Get All FAQs")
     @Produces(MediaType.APPLICATION_JSON)
     public List<FAQ> getAllFAQs() {
