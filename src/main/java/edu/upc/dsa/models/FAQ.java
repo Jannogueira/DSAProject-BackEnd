@@ -1,13 +1,13 @@
 package edu.upc.dsa.models;
 
 public class FAQ {
-    String id;
+    int id;
     java.sql.Date date;
     String question;
     String answer;
     String sender;
 
-    public FAQ(String id, java.sql.Date date,String pregunta, String respuesta, String sender) {
+    public FAQ(int id, java.sql.Date date,String pregunta, String respuesta, String sender) {
         this.id = id;
         this.date = date;
         this.question = pregunta;
@@ -17,8 +17,8 @@ public class FAQ {
 
     public FAQ() {}
 
-    public String getId() {return id;}
-    public void setId(String id) {this.id = id;}
+    public int getId() {return id;}
+    public void setId(int id) {this.id = id;}
     public java.sql.Date getDate() {return date;}
     public void setDate(java.sql.Date date) {this.date = date;}
     public String getQuestion() {return question;}
