@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Api(value = "", description = "Endpoint to Shop Service")
+@Api(value = "/Media", description = "Endpoint to Shop Service")
 @Path("")
 
 public class MediaService {
