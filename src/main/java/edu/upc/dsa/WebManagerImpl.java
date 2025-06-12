@@ -370,4 +370,17 @@ public class WebManagerImpl implements WebManager {
         }
         return faqList;
     }
+
+    @Override
+    public List<Media> getAllMedia() {
+        Session session = GameSession.openSession();
+        List<Object> mediaBBDD = session.findAll(Media.class);
+        session.close();
+        List<Media> videos = new ArrayList<>();
+        for (Object urls : mediaBBDD) {
+            videos.add((Media) urls);
+        }
+        return videos;
+    }
+
 }

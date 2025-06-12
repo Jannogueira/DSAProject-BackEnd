@@ -36,4 +36,5 @@ public interface WebManager {
     public int anadirInsignia(String username, int id);
     public void crearPregunta(String username, String titulo, String mensaje);
     public List<FAQ> getAllFAQs();
+    public List<Media> getAllMedia();
 }
