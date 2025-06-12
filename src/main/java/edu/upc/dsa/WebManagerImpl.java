@@ -358,4 +358,16 @@ public class WebManagerImpl implements WebManager {
         session.save(pregunta);
         session.close();
     }
+
+    @Override
+    public List<FAQ> getAllFAQs() {
+        Session session = GameSession.openSession();
+        List<Object> itemsBBDD = session.findAll(FAQ.class);
+        session.close();
+        List<FAQ> faqList = new ArrayList<>();
+        for (Object faqs : itemsBBDD) {
+            faqList.add((FAQ) faqs);
+        }
+        return faqList;
+    }
 }

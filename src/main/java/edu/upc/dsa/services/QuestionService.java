@@ -1,17 +1,20 @@
 package edu.upc.dsa.services;
 
 import edu.upc.dsa.WebManagerImpl;
+import edu.upc.dsa.models.FAQ;
 import edu.upc.dsa.models.Question;
 import edu.upc.dsa.util.JwtUtil;
 import io.swagger.annotations.Api;
 import edu.upc.dsa.WebManager;
+import io.swagger.annotations.ApiOperation;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 import java.time.LocalDate;
+import java.util.List;
 
-@Api(value = "/Question", description = "Endpoint to Question Service")
+@Api(value = "/QuestionsAndFAQs", description = "Endpoint to Question Service")
 @Path("")
 public class QuestionService {
     WebManager wm = WebManagerImpl.getInstance();
@@ -41,6 +44,14 @@ public class QuestionService {
         return Response.status(Response.Status.CREATED)
                 .entity("{\"status\":true, \"message\":\"Pregunta recibida\"}")
                 .build();
+    }
+    @GET
+    @Path("")
+    @ApiOperation(value = "Get All FAQs")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<FAQ> getAllFAQs() {
+        List<FAQ> faqs = wm.getAllFAQs();
+        return faqs;
     }
 
 }
