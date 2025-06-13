@@ -21,7 +21,7 @@ public class QuestionService {
     public QuestionService() {
     }
 
-    @Path("/question")
+    /*@Path("/question")
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response receiveQuestion(
@@ -44,7 +44,25 @@ public class QuestionService {
         return Response.status(Response.Status.CREATED)
                 .entity("{\"status\":true, \"message\":\"Pregunta recibida\"}")
                 .build();
+    }*/
+    @Path("/question")
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response receiveQuestion(
+            @HeaderParam("Sender") String sender,
+            @FormParam("titulo") String titulo,
+            @FormParam("mensaje") String mensaje) {
+
+        System.out.println("Pregunta recibida de: " + sender);
+
+        wm.crearPregunta(sender, titulo, mensaje);
+
+        return Response.status(Response.Status.CREATED)
+                .entity("{\"status\":true, \"message\":\"Pregunta recibida\"}")
+                .build();
     }
+
+
     @GET
     @Path("/faqs")
     @ApiOperation(value = "Get All FAQs")
