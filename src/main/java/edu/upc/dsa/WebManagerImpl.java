@@ -59,41 +59,12 @@ public class WebManagerImpl implements WebManager {
         return u != null;
     }
 
-    /*@Override
-    public Boolean loginUser(String correo, String password) {
-        Session session = GameSession.openSession();
-        Users user = session.getByField(Users.class, "correo", correo);
-        session.close();
-        return user != null && PasswordUtil.verifyPassword(password, user.getPassword());
-    }*/
     @Override
     public Boolean loginUser(String correo, String password) {
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "correo", correo);
         session.close();
-
-        if (user == null) return false;
-
-        String storedPassword = user.getPassword();
-
-        if (storedPassword.equals(password)) {
-            // Aquí deberías hashear la contraseña y actualizarla en la BBDD
-            String hashedPassword = PasswordUtil.hashPassword(password);
-            user.setPassword(hashedPassword);
-
-            // Actualizar el usuario usando los métodos existentes
-            Session updateSession = GameSession.openSession();
-            updateSession.update(user);
-            updateSession.close();
-
-            return true;
-        }
-
-        if (PasswordUtil.verifyPassword(password, storedPassword)) {
-            return true;
-        }
-
-        return false;
+        return user != null && PasswordUtil.verifyPassword(password, user.getPassword());
     }
 
 

@@ -4,6 +4,7 @@ import edu.upc.dsa.WebManager;
 import edu.upc.dsa.WebManagerImpl;
 import edu.upc.dsa.models.Items;
 import edu.upc.dsa.util.JwtUtil;
+import edu.upc.dsa.util.PasswordUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -81,7 +82,10 @@ public class AdminUserService {
                     .build();
         }
 
-        boolean actualizado = WebManagerImpl.getInstance().actualizarContrasena(usuario, nuevaContrasena);
+        // Hashear la nueva contraseña antes de actualizar
+        String hashedPassword = PasswordUtil.hashPassword(nuevaContrasena);
+        boolean actualizado = WebManagerImpl.getInstance().actualizarContrasena(usuario, hashedPassword);
+
         return Response.ok("{\"status\":" + actualizado + ", \"message\":\"Contraseña actualizada\"}").build();
     }
     @POST
