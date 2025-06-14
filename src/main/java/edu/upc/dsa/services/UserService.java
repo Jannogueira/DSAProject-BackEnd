@@ -5,6 +5,7 @@ import edu.upc.dsa.models.InsigniaDTO;
 import edu.upc.dsa.models.ItemInventarioDTO;
 import edu.upc.dsa.models.UsersScoreDTO;
 import edu.upc.dsa.util.JwtUtil;
+import edu.upc.dsa.util.PasswordUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -210,7 +211,7 @@ public class UserService {
                     .build();
         }
 
-        if (!users.getPassword().equals(contrasena)) {
+        if (!PasswordUtil.verifyPassword(contrasena, users.getPassword())) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("{\"status\":false, \"message\":\"Contraseña incorrecta\"}")
                     .build();
@@ -250,7 +251,7 @@ public class UserService {
                     .build();
         }
 
-        if (!users.getPassword().equals(contrasenaActual)) {
+        if (!PasswordUtil.verifyPassword(contrasenaActual, users.getPassword())) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("{\"status\":false, \"message\":\"Contraseña actual incorrecta\"}")
                     .build();

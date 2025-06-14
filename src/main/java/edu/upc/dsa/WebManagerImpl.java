@@ -1,12 +1,14 @@
 package edu.upc.dsa;
 
 import edu.upc.dsa.models.*;
+import edu.upc.dsa.util.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 public class WebManagerImpl implements WebManager {
 
@@ -33,9 +35,9 @@ public class WebManagerImpl implements WebManager {
     public int registerUser(String username, String correo, String password) {
         if (existeEmail(correo)) return 3;
         if (existeUser(username)) return 2;
-        System.out.println(username + " " + correo + " " + password);
+        String hashedPassword = PasswordUtil.hashPassword(password); // Hash aquí
         Session session = GameSession.openSession();
-        Users users = new Users(username, correo, password);
+        Users users = new Users(username, correo, hashedPassword);
         session.save(users);
         session.close();
         return 1;
@@ -57,13 +59,43 @@ public class WebManagerImpl implements WebManager {
         return u != null;
     }
 
+    /*@Override
+    public Boolean loginUser(String correo, String password) {
+        Session session = GameSession.openSession();
+        Users user = session.getByField(Users.class, "correo", correo);
+        session.close();
+        return user != null && PasswordUtil.verifyPassword(password, user.getPassword());
+    }*/
     @Override
     public Boolean loginUser(String correo, String password) {
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "correo", correo);
         session.close();
-        return user != null && user.getPassword().equals(password);
+
+        if (user == null) return false;
+
+        String storedPassword = user.getPassword();
+
+        if (storedPassword.equals(password)) {
+            // Aquí deberías hashear la contraseña y actualizarla en la BBDD
+            String hashedPassword = PasswordUtil.hashPassword(password);
+            user.setPassword(hashedPassword);
+
+            // Actualizar el usuario usando los métodos existentes
+            Session updateSession = GameSession.openSession();
+            updateSession.update(user);
+            updateSession.close();
+
+            return true;
+        }
+
+        if (PasswordUtil.verifyPassword(password, storedPassword)) {
+            return true;
+        }
+
+        return false;
     }
+
 
     @Override
     public List<Items> getAllShopItems() {
@@ -144,7 +176,7 @@ public class WebManagerImpl implements WebManager {
             session.close();
             return false;
         }
-        user.setPassword(nuevaContrasena);
+        user.setPassword(PasswordUtil.hashPassword(nuevaContrasena));
         session.update(user);
         session.close();
         return true;
