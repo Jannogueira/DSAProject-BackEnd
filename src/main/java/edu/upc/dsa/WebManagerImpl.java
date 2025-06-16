@@ -411,7 +411,7 @@ public class WebManagerImpl implements WebManager {
         Users usuario = session.getByField(Users.class, "usuario", user);
         if(usuario.getScore() < puntuacion){
             usuario.setScore(puntuacion);
-            session.save(usuario);
+            session.update(usuario);
         }
         session.close();
     }
@@ -422,7 +422,7 @@ public class WebManagerImpl implements WebManager {
         Users usuario = session.getByField(Users.class, "usuario", user);
         int Dinero = usuario.getMoney() + cantidad;
         usuario.setMoney(Dinero);
-        session.save(usuario);
+        session.update(usuario);
         session.close();
         return Dinero;
     }
