@@ -1,5 +1,6 @@
 package edu.upc.dsa;
 
+import com.sun.jna.platform.win32.Netapi32Util;
 import edu.upc.dsa.models.*;
 import edu.upc.dsa.util.*;
 
@@ -383,6 +384,7 @@ public class WebManagerImpl implements WebManager {
         }
         return videos;
     }
+
     @Override
     public int consumirObjeto(String username, int idObjeto) {
         Session session = GameSession.openSession();
@@ -390,6 +392,7 @@ public class WebManagerImpl implements WebManager {
         Users user = session.getByField(Users.class, "usuario", username);
         condiciones.put("ID_user", user.getId());
         condiciones.put("ID_item", idObjeto);
+
         List<Inventario> resultado = (List<Inventario>) (List<?>) session.findAll(Inventario.class, condiciones);
 
         Inventario existente = resultado.get(0);
@@ -401,6 +404,29 @@ public class WebManagerImpl implements WebManager {
         session.close();
         return 1;
     }
+
+    @Override
+    public void nuevaPuntuacion(String user, int puntuacion){
+        Session session = GameSession.openSession();
+        Users usuario = session.getByField(Users.class, "usuario", user);
+        if(usuario.getScore() < puntuacion){
+            usuario.setScore(puntuacion);
+            session.save(usuario);
+        }
+        session.close();
+    }
+
+    @Override
+    public int anadirDinero(String user, int cantidad){
+        Session session = GameSession.openSession();
+        Users usuario = session.getByField(Users.class, "usuario", user);
+        int Dinero = usuario.getMoney() + cantidad;
+        usuario.setMoney(Dinero);
+        session.save(usuario);
+        session.close();
+        return Dinero;
+    }
+
 
 
 

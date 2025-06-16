@@ -180,12 +180,9 @@ public class ShopService {
                     .entity("{\"status\":false, \"message\":\"Token inválido o expirado\"}")
                     .build();
         }
-
         String username = JwtUtil.getUsernameFromToken(token);
-
         try {
             int resultado = wm.consumirObjeto(username, idObjeto);
-
             switch (resultado) {
                 case 1:
                     return Response.ok("{\"status\":true, \"message\":\"Objeto consumido correctamente\"}").build();
@@ -194,7 +191,6 @@ public class ShopService {
                     return Response.status(Response.Status.BAD_REQUEST)
                             .entity("{\"status\":false, \"message\":\"No quedan unidades disponibles para consumir\"}")
                             .build();
-
                 default:
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                             .entity("{\"status\":false, \"message\":\"Error desconocido\"}")

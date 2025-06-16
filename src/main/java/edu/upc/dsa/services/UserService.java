@@ -390,5 +390,88 @@ public class UserService {
         }
     }
 
+    @POST
+    @Path("/actualizarPuntuacion")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Actualizar puntuación máxima", notes = "Actualiza la puntuación máxima del usuario si es mayor a la actual")
+    public Response actualizarPuntuacion(
+            @HeaderParam("Authorization") String tokenHeader,
+            @FormParam("puntuacion") int puntuacion) {
+
+        // Validación del token
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token no válido o no proporcionado\"}")
+                    .build();
+        }
+
+        String token = tokenHeader.substring("Bearer ".length());
+        if (!JwtUtil.validateToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token inválido o expirado\"}")
+                    .build();
+        }
+
+        String usuario = JwtUtil.getUsernameFromToken(token);
+
+        try {
+            wm.nuevaPuntuacion(usuario, puntuacion);
+            return Response.ok("{\"status\":true, \"message\":\"Puntuación actualizada correctamente\"}").build();
+        }
+        catch (NullPointerException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                    .build();
+        }
+        catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"status\":false, \"message\":\"Error: " + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
+    @POST
+    @Path("/anadirDinero")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Añadir dinero al usuario", notes = "Incrementa el dinero disponible del usuario")
+    public Response anadirDinero(
+            @HeaderParam("Authorization") String tokenHeader,
+            @FormParam("cantidad") int cantidad) {
+
+        // Validación del token
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token no válido o no proporcionado\"}")
+                    .build();
+        }
+
+        String token = tokenHeader.substring("Bearer ".length());
+        if (!JwtUtil.validateToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token inválido o expirado\"}")
+                    .build();
+        }
+
+        String usuario = JwtUtil.getUsernameFromToken(token);
+
+        try {
+            int nuevoSaldo = wm.anadirDinero(usuario, cantidad);
+            return Response.ok("{\"status\":true, \"message\":\"Dinero actualizado\", \"nuevoSaldo\":" + nuevoSaldo + "}").build();
+        }
+        catch (NullPointerException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                    .build();
+        }
+        catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"status\":false, \"message\":\"Error: " + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
+
 
 }

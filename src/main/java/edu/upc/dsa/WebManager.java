@@ -38,4 +38,6 @@ public interface WebManager {
     public List<FAQ> getAllFAQs();
     public List<Media> getAllMedia();
     public int consumirObjeto(String username, int idObjeto);
+    public void nuevaPuntuacion(String user, int puntuacion);
+    public int anadirDinero(String user, int cantidad);
 }
