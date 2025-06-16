@@ -41,6 +41,7 @@ public class ShopService {
     public Response comprarItems(
             @HeaderParam("Authorization") String tokenHeader, String itemsString) {
         itemsString = quitarComillas(itemsString);
+
         // Validación del token
         if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
             return Response.status(Response.Status.UNAUTHORIZED)
@@ -60,28 +61,32 @@ public class ShopService {
         Map<Integer, Integer> itemsACobrar = parseItemsString(itemsString);
         int resultado = wm.comprarItems(usuario, itemsACobrar);
 
-        switch (resultado) {
-            case -1:
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
-                        .build();
-            case -2:
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("{\"status\":false, \"message\":\"Algún item no existe\"}")
-                        .build();
-            case 0:
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("{\"status\":false, \"message\":\"Dinero insuficiente\"}")
-                        .build();
-            case 1:
-                return Response.ok("{\"status\":true, \"message\":\"Compra exitosa\"}")
-                        .build();
-            default:
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity("{\"status\":false, \"message\":\"Error inesperado\"}")
-                        .build();
+        if (resultado > 0) {
+            // Éxito: devolver dinero restante
+            return Response.ok("{\"status\":true, \"message\":\"Compra exitosa\", \"dineroRestante\":" + resultado + "}").build();
+        }
+        else {
+            switch (resultado) {
+                case -1:
+                    return Response.status(Response.Status.NOT_FOUND)
+                            .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                            .build();
+                case -2:
+                    return Response.status(Response.Status.NOT_FOUND)
+                            .entity("{\"status\":false, \"message\":\"Algún item no existe\"}")
+                            .build();
+                case 0:
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity("{\"status\":false, \"message\":\"Dinero insuficiente\"}")
+                            .build();
+                default:
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity("{\"status\":false, \"message\":\"Error inesperado\"}")
+                            .build();
+            }
         }
     }
+
 
     private Map<Integer, Integer> parseItemsString(String itemsString) {
         Map<Integer, Integer> map = new HashMap<>();

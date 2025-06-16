@@ -203,7 +203,8 @@ public class WebManagerImpl implements WebManager {
             }
 
             // Paso 4: Restar dinero y actualizar usuario
-            user.setMoney(dineroUsuario - costeTotal);
+            int dineroFinal = dineroUsuario - costeTotal;
+            user.setMoney(dineroFinal);
             session.update(user);
 
             // Paso 5: Procesar inventario
@@ -229,7 +230,7 @@ public class WebManagerImpl implements WebManager {
             }
 
             session.close();
-            return 1; // Compra exitosa
+            return dineroFinal; // Compra exitosa
         } catch (Exception e) {
             e.printStackTrace();
             session.close();
