@@ -37,4 +37,5 @@ public interface WebManager {
     public void crearPregunta(String username, String titulo, String mensaje);
     public List<FAQ> getAllFAQs();
     public List<Media> getAllMedia();
+    public int consumirObjeto(String username, int idObjeto);
 }

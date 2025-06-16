@@ -216,11 +216,9 @@ public class WebManagerImpl implements WebManager {
                 List<Inventario> resultado = (List<Inventario>) (List<?>) session.findAll(Inventario.class, condiciones);
 
                 if (resultado.isEmpty()) {
-                    // No existe en inventario: insertamos uno nuevo
                     Inventario nuevo = new Inventario(user.getId(), itemId, cantidad);
                     session.save(nuevo);
                 } else {
-                    // Ya existe: actualizamos cantidad usando updateWithCompositeKey
                     Inventario existente = resultado.get(0);
                     existente.setCantidad(existente.getCantidad() + cantidad);
 
@@ -385,5 +383,25 @@ public class WebManagerImpl implements WebManager {
         }
         return videos;
     }
+    @Override
+    public int consumirObjeto(String username, int idObjeto) {
+        Session session = GameSession.openSession();
+        java.util.HashMap<String, Object> condiciones = new java.util.HashMap<>();
+        Users user = session.getByField(Users.class, "usuario", username);
+        condiciones.put("ID_user", user.getId());
+        condiciones.put("ID_item", idObjeto);
+        List<Inventario> resultado = (List<Inventario>) (List<?>) session.findAll(Inventario.class, condiciones);
+
+        Inventario existente = resultado.get(0);
+        if(existente.getCantidad() <= 0)
+            return -1;
+        existente.setCantidad(existente.getCantidad() - 1);
+        String[] keys = {"ID_user", "ID_item"};
+        ((SessionImpl)session).updateWithCompositeKey(existente, keys);
+        session.close();
+        return 1;
+    }
+
+
 
 }

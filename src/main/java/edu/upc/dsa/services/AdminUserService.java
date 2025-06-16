@@ -82,7 +82,6 @@ public class AdminUserService {
                     .build();
         }
 
-        // Hashear la nueva contraseña antes de actualizar
         String hashedPassword = PasswordUtil.hashPassword(nuevaContrasena);
         boolean actualizado = WebManagerImpl.getInstance().actualizarContrasena(usuario, hashedPassword);
 

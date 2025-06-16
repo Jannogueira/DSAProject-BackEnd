@@ -117,8 +117,6 @@ public class UserService {
                     .build();
         }
 
-        // Todo OK
-        System.out.println("Token de usuario: " + usuario +" valido");
         return Response.ok("{\"valid\":true}").build();
     }
 
@@ -305,7 +303,6 @@ public class UserService {
     @Path("/userStats")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getScoreAndMoney(@HeaderParam("Authorization") String tokenHeader) {
-        System.out.println("TOKEN USERSTATS: " +tokenHeader);
         if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("{\"status\":false, \"message\":\"Token no proporcionado o inválido\"}")
@@ -319,7 +316,6 @@ public class UserService {
         }
 
         String username = JwtUtil.getUsernameFromToken(token);
-        System.out.println(username);
         Integer score = wm.getScore(username);
         Integer money = wm.getMoney(username);
 

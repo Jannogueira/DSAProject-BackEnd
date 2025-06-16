@@ -22,20 +22,14 @@ public class QueryHelper {
             sb.append(field);
             first = false;
         }
-
         sb.append(") VALUES (");
-
         first = true;
-
         for (String field : fields) {
             if (!first) sb.append(", ");
             sb.append("?");
             first = false;
         }
-
         sb.append(")");
-
-
         System.out.println("Generated Query: " + sb.toString());
 
         return sb.toString();

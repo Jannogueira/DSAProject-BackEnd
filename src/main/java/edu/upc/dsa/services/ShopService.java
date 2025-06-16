@@ -112,4 +112,53 @@ public class ShopService {
         return texto;
     }
 
+    @POST
+    @Path("/consumirTest")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(
+            value = "Consumir objeto (TEST)",
+            notes = "Permite consumir un objeto pasando usuario e idObjeto directamente, sin token. Solo para testing."
+    )
+    public Response consumirItemTest(
+            @FormParam("usuario") String usuario,
+            @FormParam("idObjeto") int idObjeto) {
+
+        try {
+            int resultado = wm.consumirObjeto(usuario, idObjeto);
+
+            switch (resultado) {
+                case 1:
+                    return Response.ok("{\"status\":true, \"message\":\"Objeto consumido correctamente (TEST)\"}").build();
+
+                case -1:
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity("{\"status\":false, \"message\":\"No quedan unidades disponibles para consumir (TEST)\"}")
+                            .build();
+
+                default:
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity("{\"status\":false, \"message\":\"Error desconocido (TEST)\"}")
+                            .build();
+            }
+        }
+        catch (IndexOutOfBoundsException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"El objeto no existe en el inventario (TEST)\"}")
+                    .build();
+        }
+        catch (NullPointerException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"Usuario no encontrado (TEST)\"}")
+                    .build();
+        }
+        catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"status\":false, \"message\":\"Error interno (TEST): " + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
+
+
 }
