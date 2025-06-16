@@ -112,7 +112,7 @@ public class ShopService {
         return texto;
     }
 
-    @POST
+    /*@POST
     @Path("/consumirTest")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
@@ -157,8 +157,65 @@ public class ShopService {
                     .entity("{\"status\":false, \"message\":\"Error interno (TEST): " + e.getMessage() + "\"}")
                     .build();
         }
+    }*/
+    @POST
+    @Path("/consumir")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Consumir un objeto del inventario", notes = "Reduce en 1 la cantidad del objeto especificado")
+    public Response consumirItem(
+            @HeaderParam("Authorization") String tokenHeader,
+            @FormParam("idObjeto") int idObjeto) {
+
+        // Validar token
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token no válido o no proporcionado\"}")
+                    .build();
+        }
+
+        String token = tokenHeader.substring("Bearer ".length());
+        if (!JwtUtil.validateToken(token)) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"status\":false, \"message\":\"Token inválido o expirado\"}")
+                    .build();
+        }
+
+        String username = JwtUtil.getUsernameFromToken(token);
+
+        try {
+            int resultado = wm.consumirObjeto(username, idObjeto);
+
+            switch (resultado) {
+                case 1:
+                    return Response.ok("{\"status\":true, \"message\":\"Objeto consumido correctamente\"}").build();
+
+                case -1:
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity("{\"status\":false, \"message\":\"No quedan unidades disponibles para consumir\"}")
+                            .build();
+
+                default:
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity("{\"status\":false, \"message\":\"Error desconocido\"}")
+                            .build();
+            }
+        }
+        catch (IndexOutOfBoundsException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"El objeto no existe en el inventario\"}")
+                    .build();
+        }
+        catch (NullPointerException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"status\":false, \"message\":\"Usuario no encontrado\"}")
+                    .build();
+        }
+        catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"status\":false, \"message\":\"Error interno: " + e.getMessage() + "\"}")
+                    .build();
+        }
     }
-
-
 
 }
