@@ -116,15 +116,6 @@ public class ShopService {
         }
         return map;
     }
-
-    public static String quitarComillas(String texto) {
-        if (texto != null && texto.length() >= 2 &&
-                texto.startsWith("\"") && texto.endsWith("\"")) {
-            return texto.substring(1, texto.length() - 1);
-        }
-        return texto;
-    }
-
     @POST
     @Path("/consumir")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -189,4 +180,14 @@ public class ShopService {
                     .build();
         }
     }
+
+    public static String quitarComillas(String texto) {
+        if (texto != null && texto.length() >= 2 &&
+                texto.startsWith("\"") && texto.endsWith("\"")) {
+            return texto.substring(1, texto.length() - 1);
+        }
+        return texto;
+    }
+
+
 }
