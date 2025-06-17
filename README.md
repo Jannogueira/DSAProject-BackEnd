@@ -1,7 +1,7 @@
 
 # Backend Java - TOCABOLAS API ⚪
 
-Este es el backend RESTful desarrollado en Java con JAX-RS (Jersey) para servir como API del juego Bola Merge (inspirado en Suika Game). Gestiona usuarios, inventarios de objetos especiales, puntuaciones y dinero acumulado.
+Este es el backend RESTful desarrollado en Java con JAX-RS (Jersey) para servir como API del juego TOCABOLAS (inspirado en Suika Game). Gestiona usuarios, inventarios de objetos especiales, puntuaciones y dinero acumulado.
 
 ## Funcionalidad 🧠
 - Registro y login con autenticación JWT.
