@@ -12,9 +12,9 @@ Este es el backend RESTful desarrollado en Java con JAX-RS (Jersey) para servir 
 ## Endpoints principales
 - `POST /login` - Autenticación de usuario.
 - `GET /user/stats` - Devuelve dinero y récord.
-- `GET /user/inventory` - Devuelve el inventario del usuario.
-- `POST /user/score` - Actualiza récord si es mayor.
-- `POST /user/money` - Suma dinero acumulado del juego.
+- `GET /user/inventario` - Devuelve el inventario del usuario.
+- `POST /user/actualizarPuntuacion` - Actualiza récord si es mayor.
+- `POST /user/anadirDinero` - Suma dinero acumulado del juego.
 
 ## Tecnologías usadas
 - Java 17+
