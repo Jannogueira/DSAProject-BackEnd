@@ -124,7 +124,6 @@ public class ShopService {
     public Response consumirItem(
             @HeaderParam("Authorization") String tokenHeader,
             @FormParam("idObjeto") int idObjeto) {
-    System.out.println("RECIBO AUTORIZACION: " + tokenHeader + " Y EL ID OBJETO: " + idObjeto);
         if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
             logger.warn("Token no válido o no proporcionado en /consumir");
             return Response.status(Response.Status.UNAUTHORIZED)
