@@ -1,6 +1,5 @@
 package edu.upc.dsa;
 
-import com.sun.jna.platform.win32.Netapi32Util;
 import edu.upc.dsa.models.*;
 import edu.upc.dsa.util.*;
 import org.apache.log4j.Logger;
@@ -11,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class WebManagerImpl implements WebManager {
 
     private static WebManagerImpl instance;
@@ -19,8 +17,7 @@ public class WebManagerImpl implements WebManager {
     private Shop shop;
     final static Logger logger = Logger.getLogger(WebManagerImpl.class);
 
-    private WebManagerImpl() {
-    }
+    private WebManagerImpl() {}
 
     public static WebManagerImpl getInstance() {
         if (instance == null) {
@@ -189,17 +186,15 @@ public class WebManagerImpl implements WebManager {
         logger.info("Comprando items de " + usuario + " - " + itemsACobrar);
         Session session = GameSession.openSession();
         try {
-            // Paso 1: Obtener el usuario por su nombre
             Users user = session.getByField(Users.class, "usuario", usuario);
             if (user == null) {
                 logger.error("Usuario no encontrado: " + usuario);
                 session.close();
-                return -1; // Usuario no encontrado
+                return -1;
             }
             int dineroUsuario = user.getMoney();
             int costeTotal = 0;
 
-            // Paso 2: Calcular el coste total
             for (Map.Entry<Integer, Integer> entry : itemsACobrar.entrySet()) {
                 int itemId = entry.getKey();
                 int cantidad = entry.getValue();
@@ -208,29 +203,26 @@ public class WebManagerImpl implements WebManager {
                 if (item == null) {
                     logger.error("Item no encontrado: " + itemId);
                     session.close();
-                    return -2; // Algún item no encontrado
+                    return -2;
                 }
                 costeTotal += item.getPrecio() * cantidad;
             }
 
-            // Paso 3: Verificar si el usuario tiene suficiente dinero
             if (dineroUsuario < costeTotal) {
-                session.close();
                 logger.error("Dinero insuficiente para usuario: " + usuario);
-                return 0; // Dinero insuficiente
+                session.close();
+                return 0;
             }
 
-            // Paso 4: Restar dinero y actualizar usuario
             int dineroFinal = dineroUsuario - costeTotal;
             user.setMoney(dineroFinal);
             session.update(user);
 
-            // Paso 5: Procesar inventario
             for (Map.Entry<Integer, Integer> entry : itemsACobrar.entrySet()) {
                 int itemId = entry.getKey();
                 int cantidad = entry.getValue();
 
-                java.util.HashMap<String, Object> condiciones = new java.util.HashMap<>();
+                HashMap<String, Object> condiciones = new HashMap<>();
                 condiciones.put("ID_user", user.getId());
                 condiciones.put("ID_item", itemId);
                 List<Inventario> resultado = (List<Inventario>) (List<?>) session.findAll(Inventario.class, condiciones);
@@ -250,12 +242,11 @@ public class WebManagerImpl implements WebManager {
 
             session.close();
             logger.info("Compra Exitosa!");
-            return dineroFinal; // Compra exitosa
+            return dineroFinal;
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error("Error inesperado en comprarItems para usuario: " + usuario, e);
             session.close();
-            return -99; // Error inesperado
+            return -99;
         }
     }
 
@@ -272,25 +263,26 @@ public class WebManagerImpl implements WebManager {
         logger.info("getAllItems returned: " + items);
         return items;
     }
+
     @Override
     public Integer getScore(String username) {
         logger.info("Buscando puntuación de " + username);
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", username);
         session.close();
-        logger.info("Puntuacion de " + username + " es: " + user.getScore());
+        logger.info("Puntuacion de " + username + " es: " + (user != null ? user.getScore() : null));
         return user != null ? user.getScore() : null;
     }
+
     @Override
     public Integer getMoney(String username) {
         logger.info("Buscando dinero de " + username);
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", username);
         session.close();
-        logger.info("Dinero de " + username + " es: " + user.getMoney());
+        logger.info("Dinero de " + username + " es: " + (user != null ? user.getMoney() : null));
         return user != null ? user.getMoney() : null;
     }
-
 
     @Override
     public String getInventarioPorUsuario(String username) {
@@ -327,7 +319,7 @@ public class WebManagerImpl implements WebManager {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error obteniendo inventario de " + username, e);
             return "[]";
         } finally {
             session.close();
@@ -347,7 +339,6 @@ public class WebManagerImpl implements WebManager {
 
         for (Object o : objs) {
             Users user = (Users) o;
-
             UsersScoreDTO dto = new UsersScoreDTO(user.getUsuario(), user.getScore());
             result.add(dto);
         }
@@ -356,6 +347,7 @@ public class WebManagerImpl implements WebManager {
         logger.info("Scores: " + result);
         return result;
     }
+
     @Override
     public List<InsigniaDTO> getUserInsignia(String username) {
         logger.info("Buscando insignia de " + username);
@@ -367,9 +359,10 @@ public class WebManagerImpl implements WebManager {
             result.add(new InsigniaDTO(insignia.getName(), insignia.getAvatar()));
         }
         session.close();
-        logger.info("Las insignias de: " +username+ " -son:" + result);
+        logger.info("Las insignias de: " + username + " -son:" + result);
         return result;
     }
+
     @Override
     public int anadirInsignia(String username, int id) {
         logger.info("Añadiendo insignia " + id + " al usuario: " + username);
@@ -388,6 +381,7 @@ public class WebManagerImpl implements WebManager {
         logger.info("Insignia añadida al usuario: " + username);
         return 1;
     }
+
     @Override
     public void crearPregunta(String username, String titulo, String mensaje) {
         logger.info("Creando Pregunta de " + username + " Titulo: " + titulo + " Mensaje: " + mensaje);
@@ -432,10 +426,10 @@ public class WebManagerImpl implements WebManager {
     public int consumirObjeto(String username, int idObjeto) {
         logger.info("Consumiendo objeto " + idObjeto + " al usuario: " + username);
         Session session = GameSession.openSession();
-        java.util.HashMap<String, Object> condiciones = new java.util.HashMap<>();
+        HashMap<String, Object> condiciones = new HashMap<>();
         Users user = session.getByField(Users.class, "usuario", username);
         if (user == null) {
-            logger.error("El usuario " + user + " no tiene existe");
+            logger.error("El usuario " + username + " no existe");
             session.close();
             return -1;
         }
@@ -464,7 +458,7 @@ public class WebManagerImpl implements WebManager {
         Session session = GameSession.openSession();
         Users usuario = session.getByField(Users.class, "usuario", user);
         if (usuario == null) {
-            logger.error("El usuario " + user + " no tiene existe");
+            logger.error("El usuario " + user + " no existe");
         }
         else if(usuario.getScore() < puntuacion){
             usuario.setScore(puntuacion);
@@ -482,7 +476,8 @@ public class WebManagerImpl implements WebManager {
         Session session = GameSession.openSession();
         Users usuario = session.getByField(Users.class, "usuario", user);
         if (usuario == null) {
-            logger.error("El usuario " + user + " no tiene existe");
+            logger.error("El usuario " + user + " no existe");
+            session.close();
             return -1;
         }
         int Dinero = usuario.getMoney() + cantidad;
@@ -492,7 +487,4 @@ public class WebManagerImpl implements WebManager {
         logger.info("Dinero añadido al usuario: " + user + "- Cantidad actualizada: " + Dinero);
         return Dinero;
     }
-
-
-
 }

@@ -1,13 +1,13 @@
 package edu.upc.dsa.util;
 
-import edu.upc.dsa.util.ObjectHelper;
-
-import java.util.Arrays;
+import org.apache.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class QueryHelper {
+
+    private static final Logger logger = Logger.getLogger(QueryHelper.class);
 
     public static String createQueryINSERT(Object entity) {
         StringBuffer sb = new StringBuffer("INSERT INTO ");
@@ -30,7 +30,7 @@ public class QueryHelper {
             first = false;
         }
         sb.append(")");
-        System.out.println("Generated Query: " + sb.toString());
+        logger.debug("Generated Query: " + sb.toString());
 
         return sb.toString();
     }
@@ -44,19 +44,16 @@ public class QueryHelper {
     }
 
     public static String createSelectAll(Class theClass) {
-
         return "SELECT * FROM " + theClass.getSimpleName();
     }
 
     public static String createSelectFindAll(Class theClass, HashMap<String, String> params) {
-
         Set<Map.Entry<String, String>> set = params.entrySet();
-        StringBuffer sb = new StringBuffer("SELECT * FROM "+theClass.getSimpleName()+" WHERE 1=1");
-        for (String key: params.keySet()) {
-            sb.append(" AND "+key+"=?");
+        StringBuffer sb = new StringBuffer("SELECT * FROM " + theClass.getSimpleName() + " WHERE 1=1");
+        for (String key : params.keySet()) {
+            sb.append(" AND " + key + "=?");
         }
-
-
+        logger.debug("Generated SELECT with params: " + sb.toString());
         return sb.toString();
     }
 
@@ -78,9 +75,10 @@ public class QueryHelper {
 
         sb.append(" WHERE id = ?");
 
-        System.out.println("Generated UPDATE Query: " + sb);
+        logger.debug("Generated UPDATE Query: " + sb);
         return sb.toString();
     }
+
     public static String createQueryUpdateCompositeKey(Object entity, String[] keyFields) {
         StringBuilder sb = new StringBuilder("UPDATE ");
         sb.append(entity.getClass().getSimpleName());
@@ -108,7 +106,7 @@ public class QueryHelper {
             sb.append(key).append(" = ?");
             first = false;
         }
-        System.out.println("Generated Composite Key UPDATE Query: " + sb.toString());
+        logger.debug("Generated Composite Key UPDATE Query: " + sb.toString());
         return sb.toString();
     }
 

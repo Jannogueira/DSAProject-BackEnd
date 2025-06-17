@@ -3,14 +3,15 @@ package edu.upc.dsa;
 import edu.upc.dsa.Session;
 import edu.upc.dsa.util.ObjectHelper;
 import edu.upc.dsa.util.QueryHelper;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class SessionImpl implements Session {
+    private static final Logger logger = Logger.getLogger(SessionImpl.class);
     private final Connection conn;
 
     public SessionImpl(Connection conn) {
@@ -23,48 +24,39 @@ public class SessionImpl implements Session {
 
         try {
             pstm = conn.prepareStatement(insertQuery);
-            int i = 1;  // Empezamos en el índice 1 para el primer valor del PreparedStatement.
+            int i = 1;
 
             for (String field : ObjectHelper.getFields(entity)) {
-                // Obtenemos el valor del campo usando el getter
                 Object value = ObjectHelper.getter(entity, field);
 
-                // Si el valor es null, le asignamos un valor por defecto
                 if (value == null) {
-                    // Por ejemplo, asignamos un valor por defecto según el tipo de campo
                     if (field.equalsIgnoreCase("score") || field.equalsIgnoreCase("money")) {
-                        value = 0;  // Para campos numéricos
+                        value = 0;
                     } else {
-                        value = "";  // Para campos de texto
+                        value = "";
                     }
                 }
 
-                // Verificamos el valor antes de asignarlo al PreparedStatement
-                System.out.println("Inserting value for field: " + field + " = " + value);
-
-                // Establecemos el valor en el PreparedStatement
+                logger.info("Inserting value for field: " + field + " = " + value);
                 pstm.setObject(i++, value);
             }
 
-            // Ejecutar la consulta de inserción
             pstm.executeUpdate();
-            System.out.println("Insertion successful.");
+            logger.info("Insertion successful.");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error during insertion", e);
         }
     }
-
-
 
     public void close() {
         try {
             if (conn != null && !conn.isClosed()) {
                 conn.close();
-                System.out.println("Conexión cerrada correctamente.");
+                logger.info("Conexión cerrada correctamente.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error closing connection", e);
         }
     }
 
@@ -74,28 +66,7 @@ public class SessionImpl implements Session {
     }
 
     public Object get(Class theClass, int ID) {
-/*
-        String sql = QueryHelper.createQuerySELECT(theClass);
-
-        Object o = theClass.newInstance();
-
-
-        ResultSet res = null;
-
-        ResultSetMetaData rsmd = res.getMetaData();
-
-        int numColumns = rsmd.getColumnCount();
-        int i=0;
-
-        while (i<numColumns) {
-            String key = rsmd.getColumnName(i);
-            String value = res.getObject(i);
-
-            ObjectHelper.setter(o, key, value);
-
-        }
-
-*/
+        // Método no implementado
         return null;
     }
 
@@ -119,14 +90,13 @@ public class SessionImpl implements Session {
                 }
             }
 
-            // Añadir ID como último parámetro del WHERE
             Object id = ObjectHelper.getter(object, "id");
             pstm.setObject(i, id);
 
             pstm.executeUpdate();
-            System.out.println("Update successful.");
+            logger.info("Update successful.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error during update", e);
         }
     }
 
@@ -136,9 +106,9 @@ public class SessionImpl implements Session {
             Object id = ObjectHelper.getter(object, "id");
             stmt.setObject(1, id);
             int rowsAffected = stmt.executeUpdate();
-            System.out.println("Delete completado, fila afectada: " + rowsAffected);
+            logger.info("Delete completado, fila afectada: " + rowsAffected);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error during delete", e);
         }
     }
 
@@ -159,7 +129,7 @@ public class SessionImpl implements Session {
                 result.add(entity);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error during findAll", e);
         }
         return result;
     }
@@ -169,21 +139,21 @@ public class SessionImpl implements Session {
         List<Object> result = new ArrayList<>();
         HashMap<String, String> stringParams = new HashMap<>();
 
-        System.out.println("==> findAll DEBUG - Clase objetivo: " + theClass.getSimpleName());
+        logger.debug("==> findAll DEBUG - Clase objetivo: " + theClass.getSimpleName());
 
         for (Object key : params.keySet()) {
             stringParams.put(key.toString(), params.get(key).toString());
-            System.out.println("==> Param: " + key + " = " + params.get(key));
+            logger.debug("==> Param: " + key + " = " + params.get(key));
         }
 
         String sql = QueryHelper.createSelectFindAll(theClass, stringParams);
-        System.out.println("==> SQL generado: " + sql);
+        logger.debug("==> SQL generado: " + sql);
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int index = 1;
             for (Object value : params.values()) {
                 stmt.setObject(index, value);
-                System.out.println("==> Set param[" + index + "]: " + value);
+                logger.debug("==> Set param[" + index + "]: " + value);
                 index++;
             }
 
@@ -193,45 +163,41 @@ public class SessionImpl implements Session {
 
                 while (rs.next()) {
                     Object entity = theClass.getDeclaredConstructor().newInstance();
-                    System.out.println("==> Instanciado objeto de tipo: " + entity.getClass().getSimpleName());
+                    logger.debug("==> Instanciado objeto de tipo: " + entity.getClass().getSimpleName());
 
                     for (int i = 1; i <= columnCount; i++) {
                         String column = meta.getColumnName(i);
                         Object columnValue = rs.getObject(i);
 
-                        System.out.println("    -> columna: " + column + ", valor: " + columnValue);
+                        logger.debug("    -> columna: " + column + ", valor: " + columnValue);
 
                         try {
                             ObjectHelper.setter(entity, column, columnValue);
                         } catch (Exception e) {
-                            System.out.println("    [ERROR] Al hacer setter para " + column + ": " + e.getMessage());
-                            e.printStackTrace();
+                            logger.error("    [ERROR] Al hacer setter para " + column + ": " + e.getMessage(), e);
                         }
                     }
 
                     result.add(entity);
-                    System.out.println("==> Objeto añadido a la lista.");
+                    logger.debug("==> Objeto añadido a la lista.");
                 }
 
             } catch (Exception e) {
-                System.out.println("==> [ERROR] durante la ejecución del ResultSet: " + e.getMessage());
-                e.printStackTrace();
+                logger.error("==> [ERROR] durante la ejecución del ResultSet: " + e.getMessage(), e);
             }
 
         } catch (Exception e) {
-            System.out.println("==> [ERROR] preparando el statement o ejecutando SQL: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("==> [ERROR] preparando el statement o ejecutando SQL: " + e.getMessage(), e);
         }
 
-        System.out.println("==> Total resultados encontrados: " + result.size());
+        logger.info("==> Total resultados encontrados: " + result.size());
         return result;
     }
-
-
 
     public List<Object> query(String query, Class theClass, HashMap params) {
         return null;
     }
+
     @Override
     public <T> T getByField(Class<T> theClass, String fieldName, Object value) {
         String sql = QueryHelper.createQuerySELECTbyField(theClass, fieldName);
@@ -252,10 +218,11 @@ public class SessionImpl implements Session {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error during getByField", e);
         }
         return null;
     }
+
     public void updateWithCompositeKey(Object entity, String[] keyFields) {
         String query = QueryHelper.createQueryUpdateCompositeKey(entity, keyFields);
         try (PreparedStatement pstm = conn.prepareStatement(query)) {
@@ -282,9 +249,9 @@ public class SessionImpl implements Session {
                 pstm.setObject(i++, keyValue);
             }
             pstm.executeUpdate();
-            System.out.println("Composite key update successful.");
+            logger.info("Composite key update successful.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error during composite key update", e);
         }
     }
 
@@ -303,5 +270,4 @@ public class SessionImpl implements Session {
         }
         return typedResults;
     }
-
 }
