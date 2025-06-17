@@ -28,14 +28,14 @@ public class WebManagerImpl implements WebManager {
 
     @Override
     public int registerUser(String username, String correo, String password) {
-        logger.info("New register -username: " + username + " -correo: " + correo);
+        logger.info("Nuevo registro de usuario: " + username);
         if (existeEmail(correo)) return 3;
         if (existeUser(username)) return 2;
         String hashedPassword = PasswordUtil.hashPassword(password);
         Session session = GameSession.openSession();
         Users users = new Users(username, correo, hashedPassword);
         session.save(users);
-        logger.info("New register completed!");
+        logger.info("Registro completado para usuario: " + username);
         session.close();
         return 1;
     }
@@ -58,7 +58,7 @@ public class WebManagerImpl implements WebManager {
 
     @Override
     public Boolean loginUser(String correo, String password) {
-        logger.info("New login -correo: " + correo);
+        logger.info("Intento de login para correo: " + correo);
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "correo", correo);
         session.close();
@@ -67,13 +67,13 @@ public class WebManagerImpl implements WebManager {
 
     @Override
     public List<Items> getAllShopItems() {
-        logger.info("GetAllShopItems");
+        logger.debug("Recuperando todos los items de la tienda");
         return this.shop.getAllShopItems();
     }
 
     @Override
     public void addShopItem(Items item) {
-        logger.info("addShopItem");
+        logger.debug("Añadiendo item a la tienda: " + item.getNombre());
         this.shop.addShopItem(item);
     }
 
@@ -86,7 +86,7 @@ public class WebManagerImpl implements WebManager {
             usersList.add((Users) o);
         }
         session.close();
-        logger.info("getAllUsers");
+        logger.debug("Usuarios recuperados: " + usersList.size());
         return usersList;
     }
 
@@ -110,13 +110,13 @@ public class WebManagerImpl implements WebManager {
         }
         session.delete(user);
         session.close();
-        logger.info("Usuario eliminado!");
+        logger.info("Usuario eliminado: " + usuario);
         return true;
     }
 
     @Override
     public boolean actualizarUsuario(String usuario, String nuevoUsuario) {
-        logger.info("Actualizando usuario: " + usuario + " -a nuevoUsuario: " + nuevoUsuario);
+        logger.info("Actualizando usuario: " + usuario + " -> " + nuevoUsuario);
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", usuario);
         if (user == null) {
@@ -127,13 +127,13 @@ public class WebManagerImpl implements WebManager {
         user.setUsuario(nuevoUsuario);
         session.update(user);
         session.close();
-        logger.info("Usuario actualizado!");
+        logger.info("Usuario actualizado: " + usuario + " -> " + nuevoUsuario);
         return true;
     }
 
     @Override
     public boolean actualizarCorreo(String usuario, String nuevoCorreo) {
-        logger.info("Actualizando correo de: " + usuario + " -a nuevoCorreo: " + nuevoCorreo);
+        logger.info("Actualizando correo de usuario: " + usuario);
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", usuario);
         if (user == null){
@@ -144,13 +144,13 @@ public class WebManagerImpl implements WebManager {
         user.setCorreo(nuevoCorreo);
         session.update(user);
         session.close();
-        logger.info("Correo actualizado!");
+        logger.info("Correo actualizado para usuario: " + usuario);
         return true;
     }
 
     @Override
     public boolean actualizarContrasena(String usuario, String nuevaContrasena) {
-        logger.info("Actualizando contraseña de " + usuario);
+        logger.info("Actualizando contraseña de usuario: " + usuario);
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", usuario);
         if (user == null){
@@ -161,7 +161,7 @@ public class WebManagerImpl implements WebManager {
         user.setPassword(PasswordUtil.hashPassword(nuevaContrasena));
         session.update(user);
         session.close();
-        logger.info("Contraseña actualizada!");
+        logger.info("Contraseña actualizada para usuario: " + usuario);
         return true;
     }
 
@@ -183,7 +183,7 @@ public class WebManagerImpl implements WebManager {
 
     @Override
     public int comprarItems(String usuario, Map<Integer, Integer> itemsACobrar) {
-        logger.info("Comprando items de " + usuario + " - " + itemsACobrar);
+        logger.info("Compra de items para usuario: " + usuario);
         Session session = GameSession.openSession();
         try {
             Users user = session.getByField(Users.class, "usuario", usuario);
@@ -229,19 +229,19 @@ public class WebManagerImpl implements WebManager {
 
                 if (resultado.isEmpty()) {
                     Inventario nuevo = new Inventario(user.getId(), itemId, cantidad);
-                    logger.info("Nuevo item: " + itemId + " - " + cantidad);
+                    logger.debug("Nuevo item en inventario: " + itemId + " cantidad: " + cantidad);
                     session.save(nuevo);
                 } else {
                     Inventario existente = resultado.get(0);
                     existente.setCantidad(existente.getCantidad() + cantidad);
-                    logger.info("Existente item: " + itemId + " - " + cantidad);
+                    logger.debug("Actualizando item existente: " + itemId + " cantidad añadida: " + cantidad);
                     String[] keys = {"ID_user", "ID_item"};
                     ((SessionImpl)session).updateWithCompositeKey(existente, keys);
                 }
             }
 
             session.close();
-            logger.info("Compra Exitosa!");
+            logger.info("Compra exitosa para usuario: " + usuario + ". Dinero restante: " + dineroFinal);
             return dineroFinal;
         } catch (Exception e) {
             logger.error("Error inesperado en comprarItems para usuario: " + usuario, e);
@@ -252,7 +252,7 @@ public class WebManagerImpl implements WebManager {
 
     @Override
     public List<Items> getAllItems() {
-        logger.info("getAllItems");
+        logger.debug("Recuperando todos los items");
         Session session = GameSession.openSession();
         List<Object> itemsBBDD = session.findAll(Items.class);
         session.close();
@@ -260,33 +260,33 @@ public class WebManagerImpl implements WebManager {
         for (Object o : itemsBBDD) {
             items.add((Items) o);
         }
-        logger.info("getAllItems returned: " + items);
+        logger.debug("Items recuperados: " + items.size());
         return items;
     }
 
     @Override
     public Integer getScore(String username) {
-        logger.info("Buscando puntuación de " + username);
+        logger.debug("Buscando puntuación de " + username);
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", username);
         session.close();
-        logger.info("Puntuacion de " + username + " es: " + (user != null ? user.getScore() : null));
+        logger.debug("Puntuacion de " + username + " es: " + (user != null ? user.getScore() : null));
         return user != null ? user.getScore() : null;
     }
 
     @Override
     public Integer getMoney(String username) {
-        logger.info("Buscando dinero de " + username);
+        logger.debug("Buscando dinero de " + username);
         Session session = GameSession.openSession();
         Users user = session.getByField(Users.class, "usuario", username);
         session.close();
-        logger.info("Dinero de " + username + " es: " + (user != null ? user.getMoney() : null));
+        logger.debug("Dinero de " + username + " es: " + (user != null ? user.getMoney() : null));
         return user != null ? user.getMoney() : null;
     }
 
     @Override
     public String getInventarioPorUsuario(String username) {
-        logger.info("Buscando inventario de " + username);
+        logger.debug("Buscando inventario de " + username);
         Session session = GameSession.openSession();
         StringBuilder json = new StringBuilder("[");
         boolean firstItem = true;
@@ -326,13 +326,13 @@ public class WebManagerImpl implements WebManager {
         }
 
         json.append("]");
-        logger.info("Inventario de " + username + " es: " + json.toString());
+        logger.debug("Inventario de " + username + " es: " + json.toString());
         return json.toString();
     }
 
     @Override
     public List<UsersScoreDTO> getAllUsersScoresDTO() {
-        logger.info("Buscando todas las scores");
+        logger.debug("Buscando todas las puntuaciones");
         Session session = GameSession.openSession();
         List<Object> objs = session.findAll(Users.class);
         List<UsersScoreDTO> result = new ArrayList<>();
@@ -344,13 +344,13 @@ public class WebManagerImpl implements WebManager {
         }
 
         session.close();
-        logger.info("Scores: " + result);
+        logger.debug("Scores recuperadas: " + result.size());
         return result;
     }
 
     @Override
     public List<InsigniaDTO> getUserInsignia(String username) {
-        logger.info("Buscando insignia de " + username);
+        logger.debug("Buscando insignias de " + username);
         Session session = GameSession.openSession();
         List<InsigniaDTO> result = new ArrayList<>();
         List<Insignias> insignias = session.getListByField(Insignias.class, "User", username);
@@ -359,7 +359,7 @@ public class WebManagerImpl implements WebManager {
             result.add(new InsigniaDTO(insignia.getName(), insignia.getAvatar()));
         }
         session.close();
-        logger.info("Las insignias de: " + username + " -son:" + result);
+        logger.debug("Insignias de " + username + ": " + result.size());
         return result;
     }
 
@@ -384,19 +384,19 @@ public class WebManagerImpl implements WebManager {
 
     @Override
     public void crearPregunta(String username, String titulo, String mensaje) {
-        logger.info("Creando Pregunta de " + username + " Titulo: " + titulo + " Mensaje: " + mensaje);
+        logger.info("Creando pregunta de " + username + " | Título: " + titulo);
         Session session = GameSession.openSession();
         LocalDate ahora = LocalDate.now();
         java.sql.Date fecha = java.sql.Date.valueOf(ahora);
         Question pregunta = new Question(fecha, titulo, mensaje, username);
         session.save(pregunta);
         session.close();
-        logger.info("Pregunta creada con exito: " + pregunta);
+        logger.debug("Pregunta creada con éxito: " + pregunta);
     }
 
     @Override
     public List<FAQ> getAllFAQs() {
-        logger.info("Buscando todas las FAQs");
+        logger.debug("Buscando todas las FAQs");
         Session session = GameSession.openSession();
         List<Object> itemsBBDD = session.findAll(FAQ.class);
         session.close();
@@ -404,13 +404,13 @@ public class WebManagerImpl implements WebManager {
         for (Object faqs : itemsBBDD) {
             faqList.add((FAQ) faqs);
         }
-        logger.info("FAQs: " + faqList);
+        logger.debug("FAQs recuperadas: " + faqList.size());
         return faqList;
     }
 
     @Override
     public List<Media> getAllMedia() {
-        logger.info("Buscando todas las Media");
+        logger.debug("Buscando todos los medios");
         Session session = GameSession.openSession();
         List<Object> mediaBBDD = session.findAll(Media.class);
         session.close();
@@ -418,13 +418,13 @@ public class WebManagerImpl implements WebManager {
         for (Object urls : mediaBBDD) {
             videos.add((Media) urls);
         }
-        logger.info("Media: " + videos);
+        logger.debug("Media recuperada: " + videos.size());
         return videos;
     }
 
     @Override
     public int consumirObjeto(String username, int idObjeto) {
-        logger.info("Consumiendo objeto " + idObjeto + " al usuario: " + username);
+        logger.info("Consumiendo objeto " + idObjeto + " para usuario: " + username);
         Session session = GameSession.openSession();
         HashMap<String, Object> condiciones = new HashMap<>();
         Users user = session.getByField(Users.class, "usuario", username);
@@ -448,13 +448,13 @@ public class WebManagerImpl implements WebManager {
         String[] keys = {"ID_user", "ID_item"};
         ((SessionImpl)session).updateWithCompositeKey(existente, keys);
         session.close();
-        logger.info("Item: " + idObjeto + " Consumido al usuario: " + username);
+        logger.info("Objeto consumido: " + idObjeto + " para usuario: " + username);
         return 1;
     }
 
     @Override
     public void nuevaPuntuacion(String user, int puntuacion){
-        logger.info("Nueva puntuación recibida " + puntuacion + " al usuario: " + user);
+        logger.info("Nueva puntuación recibida: " + puntuacion + " para usuario: " + user);
         Session session = GameSession.openSession();
         Users usuario = session.getByField(Users.class, "usuario", user);
         if (usuario == null) {
@@ -463,10 +463,10 @@ public class WebManagerImpl implements WebManager {
         else if(usuario.getScore() < puntuacion){
             usuario.setScore(puntuacion);
             session.update(usuario);
-            logger.info("Puntuación mejor, actualizada con éxito");
+            logger.info("Puntuación mejorada y actualizada para usuario: " + user);
         }
         else
-            logger.info("Puntuación peor, no actualizada");
+            logger.debug("Puntuación no superada, no se actualiza para usuario: " + user);
         session.close();
     }
 
@@ -484,7 +484,7 @@ public class WebManagerImpl implements WebManager {
         usuario.setMoney(Dinero);
         session.update(usuario);
         session.close();
-        logger.info("Dinero añadido al usuario: " + user + "- Cantidad actualizada: " + Dinero);
+        logger.info("Dinero añadido al usuario: " + user + " - Cantidad actualizada: " + Dinero);
         return Dinero;
     }
 }
