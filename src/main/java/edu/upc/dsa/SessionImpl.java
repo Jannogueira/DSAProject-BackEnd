@@ -53,7 +53,7 @@ public class SessionImpl implements Session {
         try {
             if (conn != null && !conn.isClosed()) {
                 conn.close();
-                logger.info("Conexión cerrada correctamente.");
+                logger.debug("Conexión cerrada correctamente.");
             }
         } catch (SQLException e) {
             logger.error("Error closing connection", e);
